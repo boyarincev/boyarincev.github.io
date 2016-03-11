@@ -17,7 +17,7 @@ categories: memory-in-dot-Net
 
 Рассмотрим на примере следующих двух типов:
 
-{% highlight ruby %}
+{% highlight C# %}
     class RefType{
 	    public int I;
 	    public string S;
