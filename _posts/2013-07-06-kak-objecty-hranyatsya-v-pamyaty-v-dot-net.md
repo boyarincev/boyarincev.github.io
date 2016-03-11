@@ -52,9 +52,11 @@ categories: memory-in-dot-Net
 
 Теперь представим, что наша функция содержит три локальных переменных:
 
+{% highlight C# %}
 	RefType refType;
 	ValType valType;
 	int[]   intArray;
+{% endhighlight %}
 
 Тогда память в стеке выделенная под эту функцию будет выглядеть следующим образом:
 
@@ -71,6 +73,7 @@ categories: memory-in-dot-Net
 
 Теперь инициализируем эти переменные значениями:
 
+{% highlight C# %}
 	refType = new RefType();
 	refType.I = 100;
 	refType.S = "refType.S";
@@ -86,6 +89,7 @@ categories: memory-in-dot-Net
 	intArray[1] = 301;
 	intArray[2] = 302;
 	intArray[3] = 303;
+{% endhighlight %}
 
 Тогда память в стеке примет следующее состояние:
 
