@@ -32,6 +32,7 @@ string - наследуется от object и коллекцию string мы м
 	{
 
 	}
+{% endhighlight %}
 
 или
 
