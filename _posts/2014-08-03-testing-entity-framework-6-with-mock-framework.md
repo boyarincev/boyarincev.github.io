@@ -2,7 +2,7 @@
 layout: post
 title: Тестирование Entity Framework 6 с помощью mock фреймворка
 categories: entity-framework
-published: draft
+published: false
 ---
 **Эта статья актуальна для Entity Framework 6** для тестирования EF5 и более ранних смотрите [Testing with a Fake Context](http://romiller.com/2012/02/14/testing-with-a-fake-dbcontext/).
 
