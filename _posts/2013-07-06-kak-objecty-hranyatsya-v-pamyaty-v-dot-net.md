@@ -17,6 +17,7 @@ categories: memory-in-dot-Net
 
 Рассмотрим на примере следующих двух типов:
 
+{% highlight ruby %}
     class RefType{
 	    public int I;
 	    public string S;
@@ -28,6 +29,7 @@ categories: memory-in-dot-Net
 	    public string S;
 	    public long L;
     }
+{% endhighlight %}
 
 Экземпляр каждого из этих типов будет занимать 16 байт (в 32 битной программе).
 
