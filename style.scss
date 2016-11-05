@@ -120,6 +120,20 @@ img {
   color: $gray;
 }
 
+.tags {
+  color: $gray;
+}
+
+ul.tags{
+  padding-left: 0px;
+  margin-top: -15px;
+}
+
+.tags li {
+  display: inline;
+  font-size: 90%;
+}
+
 // Specify the color of the selection
 ::-moz-selection {
   color: $black;

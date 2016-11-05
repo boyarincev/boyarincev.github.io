@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Погружение в ASP.NET 5 Runtime
-categories: ASP-NET-5, DNX
+tags: ASP-NET-5 DNX
 ---
 
 >Последняя версия этой статьи опубликована на [habrahabr.ru](http://habrahabr.ru/post/273509/)

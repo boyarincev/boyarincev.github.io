@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Маршрутизация в ASP.NET 5
-categories: ASP-NET-5
+tags: ASP-NET-5
 ---
 
 >Эта статья была опубликована в корпоративном блоге Microsoft на habrahabr.ru: [Ссылка](http://habrahabr.ru/company/microsoft/blog/268037/).

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Жизненный цикл ASP.NET приложения
-categories: ASP-NET
+tags: ASP-NET
 ---
 
 **Информация в посте не актуальна для ASP.NET 5**
