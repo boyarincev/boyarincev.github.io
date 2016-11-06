@@ -7,7 +7,7 @@ layout: default
 
   <ul class="tags">
     {% for tag in page.tags %}
-      <li><i class="icon-tag"></i><a href="{{ site.baseurl }}/tag/#{{tag | downcase | replace:" ","-" }}">{{tag | downcase }}</a></li> 
+      <li><i class="icon-tag"></i><a href="{{ site.baseurl }}/tags/#{{tag | downcase | replace:" ","-" }}">{{tag | downcase }}</a></li> 
     {% endfor %}
   </ul>
 
