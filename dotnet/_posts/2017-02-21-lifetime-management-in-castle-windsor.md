@@ -34,8 +34,8 @@ published: false
 
 Ссылки:
 
-[Типы жизненных стилей объектов в Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/lifestyles.md)
+1. [Типы жизненных стилей объектов в Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/lifestyles.md)
 
-[Жизненный цикл объектов в Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/lifecycle.md)
+2. [Жизненный цикл объектов в Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/lifecycle.md)
 
-[Release Policy в Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/release-policy.md)
+3. [Release Policy в Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/release-policy.md)
