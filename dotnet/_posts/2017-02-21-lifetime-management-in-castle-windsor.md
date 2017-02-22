@@ -25,6 +25,7 @@ published: false
 Если вы хотите больше узнать о диспосинге объектов, то вот еще несколько ссылок:
 
 [Dispose паттерн в .NET](https://msdn.microsoft.com/en-us/library/b1yfkh5e(v=vs.110).aspx)
+
 [Забавный ответ Эрика Липперта о диспосинге объектов](http://stackoverflow.com/a/35567469/5402731)
 
 # Castle Windsor хранит ссылки на объекты которые не требуется диспосить (не реализуют интерфейс IDisposable)?
@@ -34,4 +35,5 @@ published: false
 Ссылки:
 
 [Типы жизненных циклов объектов в Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/lifestyles.md)
+
 [Release Policy в Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/release-policy.md)
