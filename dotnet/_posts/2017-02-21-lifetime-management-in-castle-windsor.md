@@ -28,6 +28,10 @@ published: false
 
 2. [Забавный ответ Эрика Липперта о диспосинге объектов](http://stackoverflow.com/a/35567469/5402731)
 
+3. [Первая часть статьи Эрика Липперта о финалайзерах](https://ericlippert.com/2015/05/18/when-everything-you-know-is-wrong-part-one/)
+
+4. [Вторая часть статьи Эрика Липперта о финалайзерах](https://ericlippert.com/2015/05/21/when-everything-you-know-is-wrong-part-two/)
+
 # Castle Windsor хранит ссылки на объекты которые не требуется диспосить (не реализуют интерфейс IDisposable)?
 
 По дефолту - да. Castle Windsor будет хранить ссылки на любые объекты.
