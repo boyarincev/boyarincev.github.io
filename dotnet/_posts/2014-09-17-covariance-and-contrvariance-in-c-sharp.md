@@ -27,37 +27,37 @@ string - наследуется от object и коллекцию string мы м
 
 <!--excerpt-->
 
-{% highlight C# %}
-	public SomeType Zoo()
-	{
+```csharp
+public SomeType Zoo()
+{
 
-	}
-{% endhighlight %}
+}
+```
 
 или
 
-{% highlight C# %}
-	public void Zoo(SomeType param)
-	{
+```csharp
+public void Zoo(SomeType param)
+{
 
-	}
-{% endhighlight %}
+}
+```
 
 Теперь давайте представим, что у нас есть следующий метод:
 
-{% highlight C# %}
-	public Animal Zoo()
-	{
-		//someCode...
-		return Cat;
-	}
-{% endhighlight %}
+```csharp
+public Animal Zoo()
+{
+	//someCode...
+	return Cat;
+}
+```
 
 Сигнатурой метода определен возвращаемый тип Animal, а мы возвращаем Cat, вот как этот метод будет использоваться:
 
-{% highlight C# %}
-	Animal someAnimal = Zoo();
-{% endhighlight %}
+```csharp
+Animal someAnimal = Zoo();
+```
 
 Данный код полностью работоспособен - мы можем возвращать из метода, тип производный от заявленного сигнатурой метода и он будет приведен к базовому.
 
