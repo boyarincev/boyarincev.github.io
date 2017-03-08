@@ -12,10 +12,10 @@ tags: C#
 
 Классическим является пример с приведением списка:
 
-```C#
+~~~ C#
 	IEnumerable<string> strCollection = new List<string>() {"string"};
 	IEnumerable<object> objectCollection = strCollection;
-```
+~~~
 
 string - наследуется от object и коллекцию string мы можем привести к коллекции object.
 
