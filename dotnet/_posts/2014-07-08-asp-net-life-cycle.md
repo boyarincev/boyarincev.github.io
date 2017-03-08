@@ -57,19 +57,19 @@ tags: ASP-NET
 
 Вот типичный код из автоматически сгенерированного Global.asax.cs для MVC приложения:
 
-{% highlight C# %}	
-	namespace WebApplication
+```csharp
+namespace WebApplication
+{
+    public class MvcApplication : System.Web.HttpApplication
+    {
+	protected void Application_Start()
 	{
-	    public class MvcApplication : System.Web.HttpApplication
-	    {
-	        protected void Application_Start()
-	        {
-	            AreaRegistration.RegisterAllAreas();
-	            RouteConfig.RegisterRoutes(RouteTable.Routes);
-	        }
-	    }
+	    AreaRegistration.RegisterAllAreas();
+	    RouteConfig.RegisterRoutes(RouteTable.Routes);
 	}
-{% endhighlight %}
+    }
+}
+```
  
 MvcApplication - и есть класс представляющий наше приложение - его экземпляр создается и назначается для обработки запросов (имя может быть любым, оно определяется через разметку файла Global.asax и при необходимости может быть изменено).
 
