@@ -13,8 +13,8 @@ tags: C#
 Классическим является пример с приведением списка:
 
 ```csharp
-	IEnumerable<string> strCollection = new List<string>() {"string"};
-	IEnumerable<object> objectCollection = strCollection;
+IEnumerable<string> strCollection = new List<string>() {"string"};
+IEnumerable<object> objectCollection = strCollection;
 ```
 
 string - наследуется от object и коллекцию string мы можем привести к коллекции object.
@@ -63,45 +63,45 @@ Animal someAnimal = Zoo();
 
 Мы, фактически, могли бы использовать метод с сигнатурой:
 
-{% highlight C# %}
-	public Cat Zoo()
-	{
+```csharp
+public Cat Zoo()
+{
 
-	}
-{% endhighlight %}
+}
+```
 
 Вместо:
 
-{% highlight C# %}
-	public Animal Zoo()
-	{
+```csharp
+public Animal Zoo()
+{
 
-	}
-{% endhighlight %}
+}
+```
 
 И не заметили бы этого в вызывающем коде:
 
-{% highlight C# %}
-	Animal someAnimal = Zoo();
-{% endhighlight %}
+```csharp
+Animal someAnimal = Zoo();
+```
 
 Это и есть ковариация - у нас есть метод Zoo, который использует в качестве возвращаемого значения тип Animal, но вместо него, мы можем использовать метод с возвращаемым значением типа Cat. Можно сказать, что сигнатура метода:
 
-{% highlight C# %}
-	public Cat Zoo()
-	{
+```csharp
+public Cat Zoo()
+{
 
-	}
-{% endhighlight %}
+}
+```
 
 приводится к сигнатуре:
 
-{% highlight C# %}
-	public Animal Zoo()
-	{
+```csharp
+public Animal Zoo()
+{
 
-	}
-{% endhighlight %}
+}
+```
 
 или можно записать так:
 
@@ -111,57 +111,57 @@ Animal someAnimal = Zoo();
 
 Теперь, другой пример, представьте сигнатуру метода:
 
-{% highlight C# %}
-	public void Zoo(Animal param)
-	{
-		
-	}
-{% endhighlight %}
+```csharp
+public void Zoo(Animal param)
+{
+
+}
+```
 
 И код его вызова:
 
-{% highlight C# %}
-	var cat = new Cat();
-	Zoo(cat);
-{% endhighlight %}
+```csharp
+var cat = new Cat();
+Zoo(cat);
+```
 
 Данный код, тоже полностью работоспособен - мы можем передать в качестве параметра производный тип и он безболезненно будет приведен к базовому и метод нормально отработает.
 
 Мы можем вместо сигнатуры:
 
-{% highlight C# %}
-	public void Zoo(Animal param)
-	{
-		
-	}
-{% endhighlight %}
+```csharp
+public void Zoo(Animal param)
+{
+
+}
+```
 
 использовать сигнатуру:
 
-{% highlight C# %}
-	public void Zoo(Cat param)
-	{
-		
-	}
-{% endhighlight %}
+```csharp
+public void Zoo(Cat param)
+{
+
+}
+```
 
 Это - контрвариация. У нас есть тип Zoo, который в качестве параметра использует тип Animal, но вместо него мы можем использовать метод Zoo, который в качестве параметра принимает Cat, то есть, можно сказать, что сигнатура метода:
 
-{% highlight C# %}
-	public void Zoo(Animal param)
-	{
-	
-	}
-{% endhighlight %}
+```csharp
+public void Zoo(Animal param)
+{
+
+}
+```
 
 приводится к сигнатуре:
 
-{% highlight C# %}
-	public void Zoo(Cat param)
-	{
+```csharp
+public void Zoo(Cat param)
+{
 
-	}
-{% endhighlight %}
+}
+```
 
 или это можно записать так:
 	
@@ -182,48 +182,48 @@ Animal someAnimal = Zoo();
 
 Код примера с ковариацией:
 
-{% highlight C# %}
-	namespace ConsoleApplication
+```csharp
+namespace ConsoleApplication
+{
+    class Animal
+    {
+
+    }
+
+    class Cat : Animal
+    {
+
+    }
+
+    class Program
+    {
+	delegate Animal delegateAnimal();
+
+	static void Main(string[] args)
 	{
-	    class Animal
-	    {
-	
-	    }
-	
-	    class Cat : Animal
-	    {
-	
-	    }
-	
-	    class Program
-	    {
-	        delegate Animal delegateAnimal();
-	
-	        static void Main(string[] args)
-	        {
-	            var param = new Program();
-	            delegateAnimal dA = MethodCat;
-				Animal result = dA();
-	        }
-	
-	        static Cat MethodCat()
-	        {
-	            return new Cat();
-	        }
-	    }
+	    var param = new Program();
+	    delegateAnimal dA = MethodCat;
+			Animal result = dA();
 	}
-{% endhighlight %}
+
+	static Cat MethodCat()
+	{
+	    return new Cat();
+	}
+    }
+}
+```
 
 В переменную с типом делегата `delegate Animal delegateAnimal();` - возвращаемое значение Animal 
 
 Мы помещаем метод с сигнатурой:
 
-{% highlight C# %}
-	Cat MethodCat()
-	{
-	    return new Cat();
-	}
-{% endhighlight %}
+```csharp
+Cat MethodCat()
+{
+    return new Cat();
+}
+```
 
 Возвращаемое значение Cat.
 
@@ -235,54 +235,54 @@ Animal someAnimal = Zoo();
 
 Рассмотрим обобщенный делегат `Func<out TResult>` - этот делегат используется для методов с сигнатурой:
 
-{% highlight C# %}
-	TResult SomeMethod()
-	{
-	
-	}
-{% endhighlight %}
+```csharp
+TResult SomeMethod()
+{
+
+}
+```
 
 Перепишем пример выше, используя этот делегат:
 
-{% highlight C# %}
-	namespace ConsoleApplication
+```csharp
+namespace ConsoleApplication
+{
+    class Animal
+    {
+
+    }
+
+    class Cat : Animal
+    {
+
+    }
+
+    class Program
+    {
+
+	static void Main(string[] args)
 	{
-	    class Animal
-	    {
-	
-	    }
-	
-	    class Cat : Animal
-	    {
-	
-	    }
-	
-	    class Program
-	    {
-	
-	        static void Main(string[] args)
-	        {
-	            Func<Animal> fA = MethodCat;
-	            Func<Cat> fC = MethodCat;
-	
-	            fA = fC; // работает
-	            // fC = fA; // ошибка компиляции
-				Animal result = fA(); // вызывается метод MethodCat(), а возвращаемое значение с типом Cat приводится к Animal
-	        }
-	
-	
-	        static Cat MethodCat()
-	        {
-	            return new Cat();
-	        }
-	
-	        static Animal MethodAnimal()
-	        {
-	            return new Animal();
-	        }
-	    }
+	    Func<Animal> fA = MethodCat;
+	    Func<Cat> fC = MethodCat;
+
+	    fA = fC; // работает
+	    // fC = fA; // ошибка компиляции
+			Animal result = fA(); // вызывается метод MethodCat(), а возвращаемое значение с типом Cat приводится к Animal
 	}
-{% endhighlight %}
+
+
+	static Cat MethodCat()
+	{
+	    return new Cat();
+	}
+
+	static Animal MethodAnimal()
+	{
+	    return new Animal();
+	}
+    }
+}
+```
 
 Как видно из примера, мы можем как присвоить переменной с типом обобщенного делегата `Func<Animal>`, метод с типом возвращаемого значения Cat: `Func<Animal> fA = MethodCat;`, так и можем переменной с типом `Func<Animal>` присвоить переменную с типом `Func<Cat>`:
 	
@@ -302,64 +302,64 @@ Animal someAnimal = Zoo();
 
 Он используется для методов без возвращаемого значения и одним параметром:
 
-{% highlight C# %}
-	void SomeMethod(T param)
-	{
+```csharp
+void SomeMethod(T param)
+{
 
-	}
-{% endhighlight %}
+}
+```
 
 А так как в параметры метода мы можем передавать тип производный от требуемого, тот этот делегат должен поддерживать контрвариацию.
 
 Пример:
 
-{% highlight C# %}
+```csharp
 	namespace ConsoleApplication
 	{
 	    class Animal
 	    {
-	
-	    }
-	
-	    class Cat : Animal
-	    {
-	
-	    }
-	
-	    class Program
-	    {
-	
-	        static void Main(string[] args)
-	        {
-	            Action<Animal> fA = MethodAnimal;
-	            Action<Cat> fC = MethodAnimal;
-	
-	            fC = fA; // работает
-	            // fA = fC; //ошибка компиляции
-				fC(new Cat()); // вызывается метод MethodAnimal(), а Cat приводится к Animal
-	        }
-	
-	
-	        static void MethodCat(Cat param)
-	        {
-	
-	        }
-	
-	        static void MethodAnimal(Animal param)
-	        {
-	
-	        }
-	    }
+
+    }
+
+    class Cat : Animal
+    {
+
+    }
+
+    class Program
+    {
+
+	static void Main(string[] args)
+	{
+	    Action<Animal> fA = MethodAnimal;
+	    Action<Cat> fC = MethodAnimal;
+
+	    fC = fA; // работает
+	    // fA = fC; //ошибка компиляции
+			fC(new Cat()); // вызывается метод MethodAnimal(), а Cat приводится к Animal
 	}
-{% endhighlight %}
+
+
+	static void MethodCat(Cat param)
+	{
+
+	}
+
+	static void MethodAnimal(Animal param)
+	{
+
+	}
+    }
+}
+```
 
 Мы можем как присвоить делегату с типом `Action<Cat>` метод с типом принимаемого параметра `Animal`, так и можем переменной с типом `Action<Cat>` присвоить переменную с типом `Action<Animal>` - то есть привести `Action<Animal>` к `Action<Cat>` - что является контрвариацией.
 
 Компилятор разрашает нам это сделать из-за ключевого слова `in` в объявлении делегата:
 
-{% highlight C# %}
-	delegate void Action(in T param);
-{% endhighlight %}
+```csharp
+delegate void Action(in T param);
+```
 
 Оно говорит компилятору, что данный тип будет использоваться только в качестве параметра метода - а значит вместо этого типа мы можем использовать производный.
 
@@ -379,84 +379,84 @@ Animal someAnimal = Zoo();
 
 Ковариацию обобщенного интерфейса, мы уже видели - в самом начале, когда переменной с типом `IEnumerable<object>` мы присвоили переменную с типом `IEnumerable<string>`, работает она точно также как и в обобщенных делегатах благодаря использованию ключевого слова в типе обобщения:
 
-{% highlight C# %}
-	IEnumerable<out T>
-{% endhighlight %}
+```csharp
+IEnumerable<out T>
+```
 
 И обозначает, что данный тип T в этом интерфейсе будет использоваться только в качестве возвращаемого значения методов, давайте изучим этот интерфейс:
 
-{% highlight C# %}
-    public interface IEnumerable<out T> : IEnumerable
-    {
-        IEnumerator<T> GetEnumerator();
-    }
-{% endhighlight %}
+```csharp
+public interface IEnumerable<out T> : IEnumerable
+{
+IEnumerator<T> GetEnumerator();
+}
+```
 
 смотрим интерфейс IEnumerator:
 
-{% highlight C# %}
-    public interface IEnumerator<out T> : IDisposable, IEnumerator
-    {
-        T Current { get; }
-    }
-{% endhighlight %}
+```csharp
+public interface IEnumerator<out T> : IDisposable, IEnumerator
+{
+T Current { get; }
+}
+```
 
 T - это возвращаемое значение свойства Current (свойства фактически реализуются как методы, свойство только с get - идентично методу, который не имеет входных параметров, а только возвращаемое значение), настоящий тип возвращаемого значения будет `string`, но оно будет приводиться к типу `Object`.
 
 Пример контрвариация в стандартных обобщенных интерфейсах, найти сложнее, поэтому напишем его сами:
 
-{% highlight C# %}
-	namespace ConsoleApplication
+```csharp
+namespace ConsoleApplication
+{
+    class Animal
+    {
+
+    }
+
+    class Cat : Animal
+    {
+
+    }
+
+    interface IZoo<in T>
+    {
+	void PutZoo(T zoo);
+    }
+
+    class ZooAnimal : IZoo<Animal>
+    {
+	public void PutZoo(Animal zoo)
 	{
-	    class Animal
-	    {
-	
-	    }
-	
-	    class Cat : Animal
-	    {
-	
-	    }
-	
-	    interface IZoo<in T>
-	    {
-	        void PutZoo(T zoo);
-	    }
-	
-	    class ZooAnimal : IZoo<Animal>
-	    {
-	        public void PutZoo(Animal zoo)
-	        {
-	            
-	        }
-	    }
-	
-	    class ZooCat : IZoo<Cat>
-	    {
-	        public void PutZoo(Cat zoo)
-	        {
-	            
-	        }
-	    }
-	
-	    class Program
-	    {
-	        static void Main(string[] args)
-	        {
-	            IZoo<Animal> zooAnimal = new ZooAnimal();
-	            IZoo<Cat> zooCat = zooAnimal;
-	            zooCat.PutZoo(new Cat());
-	        }
-	    }
+
 	}
-{% endhighlight %}
+    }
+
+    class ZooCat : IZoo<Cat>
+    {
+	public void PutZoo(Cat zoo)
+	{
+
+	}
+    }
+
+    class Program
+    {
+	static void Main(string[] args)
+	{
+	    IZoo<Animal> zooAnimal = new ZooAnimal();
+	    IZoo<Cat> zooCat = zooAnimal;
+	    zooCat.PutZoo(new Cat());
+	}
+    }
+}
+```
 
 Переменной с типом `IZoo<Cat>` мы можем присвоить переменную с типом `IZoo<Animal>`:
 
-{% highlight C# %}
-    IZoo<Animal> zooAnimal = new ZooAnimal();
-    IZoo<Cat> zooCat = zooAnimal;
-{% endhighlight %}
+```csharp
+IZoo<Animal> zooAnimal = new ZooAnimal();
+IZoo<Cat> zooCat = zooAnimal;
+```
 
 При вызове метода `PutZoo(new Cat())` будет вызван метод `PutZoo()` класса ZooAnimal, который принимает параметр с типом `Animal` - мы же передаем `Cat`, который может быть приведен к типу `Animal`, так как является его наследником.
 
@@ -470,16 +470,16 @@ T - это возвращаемое значение свойства Current (�
 
 Вообще наследование структур - не поддерживается языком, поэтому сделать какую-то иерархию структур, которые можно было бы приводить друг к другу не получится при всем желании. Но язык поддерживает такую возможность как упаковка, когда значимый тип мы можем упаковать в тип `object`:
 
-{% highlight C# %}
-	object obj = 5;
-{% endhighlight %}
+```csharp
+object obj = 5;
+```
 
 Однако делать приведения типа:
 
-{% highlight C# %}
-	IEnumerable<int> intList = new List<int>();
-	IEnumerable<object> objList = intList;
-{% endhighlight %}
+```csharp
+IEnumerable<int> intList = new List<int>();
+IEnumerable<object> objList = intList;
+```
 
 Нельзя.
 
@@ -489,10 +489,10 @@ T - это возвращаемое значение свойства Current (�
 
 Массив с типом `Cat[]` мы можем привести к массиву с типом `Animal[]`
 
-{% highlight C# %}
-	Cat[] catArr =Cat[5];
-	Animal[] animalArr = catArr;
-{% endhighlight %}
+```csharp
+Cat[] catArr =Cat[5];
+Animal[] animalArr = catArr;
+```
 
 ## Итог
 
