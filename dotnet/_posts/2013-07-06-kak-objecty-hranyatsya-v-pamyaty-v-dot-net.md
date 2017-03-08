@@ -18,19 +18,19 @@ published: true
 
 Рассмотрим на примере следующих двух типов:
 
-{% highlight C# %}
-    class RefType{
-	    public int I;
-	    public string S;
-    	public long L;
-    }
-    
-    struct ValType{
-	    public int I;
-	    public string S;
-	    public long L;
-    }
-{% endhighlight %}
+```csharp
+class RefType {
+    public int I;
+    public string S;
+public long L;
+}
+
+struct ValType {
+    public int I;
+    public string S;
+    public long L;
+}
+```
 
 Экземпляр каждого из этих типов будет занимать 16 байт (в 32 битной программе).
 
@@ -53,11 +53,11 @@ published: true
 
 Теперь представим, что наша функция содержит три локальных переменных:
 
-{% highlight C# %}
-	RefType refType;
-	ValType valType;
-	int[]   intArray;
-{% endhighlight %}
+```csharp
+RefType refType;
+ValType valType;
+int[]   intArray;
+```
 
 Тогда память в стеке выделенная под эту функцию будет выглядеть следующим образом:
 
@@ -74,23 +74,23 @@ published: true
 
 Теперь инициализируем эти переменные значениями:
 
-{% highlight C# %}
-	refType = new RefType();
-	refType.I = 100;
-	refType.S = "refType.S";
-	refType.L = 0x0123456789ABCDEF;
-	
-	valType = new ValType();
-	valType.I = 200;
-	valType.S = "valType.S";
-	valType.L = 0x0011223344556677;
-	
-	intArray = new int[4];
-	intArray[0] = 300;
-	intArray[1] = 301;
-	intArray[2] = 302;
-	intArray[3] = 303;
-{% endhighlight %}
+```csharp
+refType = new RefType();
+refType.I = 100;
+refType.S = "refType.S";
+refType.L = 0x0123456789ABCDEF;
+
+valType = new ValType();
+valType.I = 200;
+valType.S = "valType.S";
+valType.L = 0x0011223344556677;
+
+intArray = new int[4];
+intArray[0] = 300;
+intArray[1] = 301;
+intArray[2] = 302;
+intArray[3] = 303;
+```
 
 Тогда память в стеке примет следующее состояние:
 
