@@ -95,3 +95,7 @@ highlighter: rouge
 lsi:         false
 excerpt_separator: "\n\n"
 incremental: false
+
+# Outputting
+liquid:
+  error_mode: warn
