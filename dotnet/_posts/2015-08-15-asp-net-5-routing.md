@@ -210,7 +210,9 @@ public RouterMiddleware(
 
 2. В файле `Startup.cs` добавляем использование пространства имен `Microsoft.AspNet.Builder`:
 			
-		using Microsoft.AspNet.Builder;
+```csharp
+using Microsoft.AspNet.Builder;
+```
 
 Нужные нам extensions-методы для подключения MVC находятся в нем.
 
