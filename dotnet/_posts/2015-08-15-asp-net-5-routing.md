@@ -140,13 +140,15 @@ routeBuilder.MapRoute("default", "{controller}/{action}/{id}");
 
 Сам `MapRoute()` также как и в MVC 5 - [extension-метод](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/RouteBuilderExtensions.cs), а его вызов в итоге сводится к Созданию экземпляра класса [TemplateRoute](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/Template/TemplateRoute.cs) и добавлению его в коллекцию `Routes` нашего объекта `RouteBuilder`:
 
-	routeBuilder.Routes.Add(new TemplateRoute(routeCollectionBuilder.DefaultHandler,
-        name, // в нашем случае передается "default"
-        template, // в нашем случае передается "{controller}/{action}/{id}"
-        ObjectToDictionary(defaults),
-        ObjectToDictionary(constraints),
-        ObjectToDictionary(dataTokens),
-        inlineConstraintResolver));
+```csharp
+routeBuilder.Routes.Add(new TemplateRoute(routeCollectionBuilder.DefaultHandler,
+    name, // в нашем случае передается "default"
+    template, // в нашем случае передается "{controller}/{action}/{id}"
+    ObjectToDictionary(defaults),
+    ObjectToDictionary(constraints),
+    ObjectToDictionary(dataTokens),
+    inlineConstraintResolver));
+```
 
 Что интересно свойство `Routes` - это коллекция `IRouter`, то есть `TemplateRoute` тоже реализует интерфейс `IRouter`, как и созданный нами `ASPNET5RoutingHandler`, кстати, он передается в конструктор `TemplateRoute`.
 
