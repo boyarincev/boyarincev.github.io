@@ -31,9 +31,9 @@ RouteTable.Routes.MapRoute(
 
 ```charp
 RouteTable.Routes.Add(new Route(
-url: "{controller}/{action}/{id}",
-defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
-routeHandler: new MvcRouteHandler())
+	url: "{controller}/{action}/{id}",
+	defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
+	routeHandler: new MvcRouteHandler())
 );
 ```
 
