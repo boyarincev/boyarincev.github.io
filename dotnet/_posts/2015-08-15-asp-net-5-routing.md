@@ -17,9 +17,9 @@ tags: ASP-NET-5
 
 ```csharp
 RouteTable.Routes.MapRoute(
-	name: "Default",
-	url: "{controller}/{action}/{id}",
-	defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+    name: "Default",
+    url: "{controller}/{action}/{id}",
+    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
     );
 ```
 
@@ -31,9 +31,9 @@ RouteTable.Routes.MapRoute(
 
 ```csharp
 RouteTable.Routes.Add(new Route(
-	url: "{controller}/{action}/{id}",
-	defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
-	routeHandler: new MvcRouteHandler())
+    url: "{controller}/{action}/{id}",
+    defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
+    routeHandler: new MvcRouteHandler())
 );
 ```
 
@@ -173,9 +173,9 @@ public static IApplicationBuilder UseRouter([NotNull] this IApplicationBuilder b
 
 ```csharp
 public RouterMiddleware(
-	RequestDelegate next,
-	ILoggerFactory loggerFactory,
-	IRouter router)
+    RequestDelegate next,
+    ILoggerFactory loggerFactory,
+    IRouter router)
 ```
 
 Объект `RouteCollection` тоже реализует интерфейс `IRouter`, как и `ASPNET5RoutingHandler` c `TemplateRoute`.
@@ -348,14 +348,14 @@ routeBuilder.MapRoute("regexStringRoute", //name
 [Route("appointments")]
 public class Appointments : ApplicationBaseController
 {
-	[Route("check")]
-	public IActionResult Index()
-	{
-	    return new ContentResult
-	    {
-		    Content = "2 appointments available."
-	    };
-	}
+    [Route("check")]
+    public IActionResult Index()
+    {
+        return new ContentResult
+        {
+            Content = "2 appointments available."
+        };
+    }
 }
 ```
 
@@ -386,15 +386,15 @@ public void ConfigureServices(IServiceCollection services)
 
 ```csharp
 public static void ConfigureRouting(
-	this IServiceCollection services,
-	Action<RouteOptions> setupAction)
+    this IServiceCollection services,
+    Action<RouteOptions> setupAction)
 {
-	if (setupAction == null)
-	{
-	    throw new ArgumentNullException(nameof(setupAction));
-	}
+    if (setupAction == null)
+    {
+        throw new ArgumentNullException(nameof(setupAction));
+    }
 
-	services.Configure(setupAction);
+    services.Configure(setupAction);
 }
 ```
 
