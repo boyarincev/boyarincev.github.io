@@ -110,16 +110,16 @@ namespace AspNet5Routing
 {
     public class ASPNET5RoutingHandler : IRouter
     {
-	public VirtualPathData GetVirtualPath(VirtualPathContext context)
-	{
+        public VirtualPathData GetVirtualPath(VirtualPathContext context)
+        {
 
-	}
+        }
 
-	public async Task RouteAsync(RouteContext context)
-	{
-	    await context.HttpContext.Response.WriteAsync("ASPNET5RoutingHandler work");
-	    context.IsHandled = true;
-	}
+        public async Task RouteAsync(RouteContext context)
+        {
+            await context.HttpContext.Response.WriteAsync("ASPNET5RoutingHandler work");
+            context.IsHandled = true;
+        }
     }
 }
 ```
@@ -141,12 +141,12 @@ routeBuilder.MapRoute("default", "{controller}/{action}/{id}");
 Сам `MapRoute()` также как и в MVC 5 - [extension-метод](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/RouteBuilderExtensions.cs), а его вызов в итоге сводится к Созданию экземпляра класса [TemplateRoute](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/Template/TemplateRoute.cs) и добавлению его в коллекцию `Routes` нашего объекта `RouteBuilder`:
 
 	routeBuilder.Routes.Add(new TemplateRoute(routeCollectionBuilder.DefaultHandler,
-	                                                name, // в нашем случае передается "default"
-	                                                template, // в нашем случае передается "{controller}/{action}/{id}"
-	                                                ObjectToDictionary(defaults),
-	                                                ObjectToDictionary(constraints),
-	                                                ObjectToDictionary(dataTokens),
-	                                                inlineConstraintResolver));
+        name, // в нашем случае передается "default"
+        template, // в нашем случае передается "{controller}/{action}/{id}"
+        ObjectToDictionary(defaults),
+        ObjectToDictionary(constraints),
+        ObjectToDictionary(dataTokens),
+        inlineConstraintResolver));
 
 Что интересно свойство `Routes` - это коллекция `IRouter`, то есть `TemplateRoute` тоже реализует интерфейс `IRouter`, как и созданный нами `ASPNET5RoutingHandler`, кстати, он передается в конструктор `TemplateRoute`.
 
@@ -254,9 +254,9 @@ public void Configure(IApplicationBuilder app)
 {
     return app.UseMvc(routes =>
     {
-	routes.MapRoute(
-	    name: "default",
-	    template: "{controller=Home}/{action=Index}/{id?}");
+        routes.MapRoute(
+            name: "default",
+            template: "{controller=Home}/{action=Index}/{id?}");
     });
 }
 ```
@@ -283,9 +283,9 @@ public static IApplicationBuilder UseMvcWithDefaultRoute(this IApplicationBuilde
 {
     return app.UseMvc(routes =>
     {
-	routes.MapRoute(
-	    name: "default",
-	    template: "{controller=Home}/{action=Index}/{id?}");
+        routes.MapRoute(
+            name: "default",
+            template: "{controller=Home}/{action=Index}/{id?}");
     });
 }
 ```
@@ -303,8 +303,8 @@ public static IApplicationBuilder UseMvc(
 
     var routes = new RouteBuilder
     {
-	DefaultHandler = new MvcRouteHandler(),
-	ServiceProvider = app.ApplicationServices
+        DefaultHandler = new MvcRouteHandler(),
+        ServiceProvider = app.ApplicationServices
     };
 
     configureRoutes(routes);
@@ -312,8 +312,8 @@ public static IApplicationBuilder UseMvc(
     // Adding the attribute route comes after running the user-code because
     // we want to respect any changes to the DefaultHandler.
     routes.Routes.Insert(0, AttributeRouting.CreateAttributeMegaRoute(
-	routes.DefaultHandler,
-	app.ApplicationServices));
+        routes.DefaultHandler,
+        app.ApplicationServices));
 
     return app.UseRouter(routes.Build());
 }
@@ -329,9 +329,9 @@ public static IApplicationBuilder UseMvc(
 
 ```csharp
 routeBuilder.MapRoute("regexStringRoute", //name
-	      "api/rconstraint/{controller}", //template
-	      new { foo = "Bar" }, //defaults
-	      new { controller = new RegexRouteConstraint("^(my.*)$") }); //constraints
+    "api/rconstraint/{controller}", //template
+    new { foo = "Bar" }, //defaults
+    new { controller = new RegexRouteConstraint("^(my.*)$") }); //constraints
 ```
 
 ## Attribute-Based маршрутизация
@@ -351,7 +351,7 @@ public class Appointments : ApplicationBaseController
 	{
 	    return new ContentResult
 	    {
-		Content = "2 appointments available."
+		    Content = "2 appointments available."
 	    };
 	}
 }
@@ -372,11 +372,11 @@ public class Appointments : ApplicationBaseController
 public void ConfigureServices(IServiceCollection services)
 {
     services.ConfigureRouting(
-	routeOptions =>
-	{
-	    routeOptions.LowercaseUrls = true; // генерация url в нижнем регистре
-	    routeOptions.AppendTrailingSlash = true; // добавление слеша в конец url
-	});
+        routeOptions =>
+        {
+            routeOptions.LowercaseUrls = true; // генерация url в нижнем регистре
+            routeOptions.AppendTrailingSlash = true; // добавление слеша в конец url
+        });
 }
 ```
 
