@@ -15,7 +15,7 @@ tags: ASP-NET-5
 
 Типичный код настройки системы маршрутизации в MVC приложении:
 
-```charp
+```
 RouteTable.Routes.MapRoute(
 		name: "Default",
 		url: "{controller}/{action}/{id}",
@@ -29,7 +29,7 @@ RouteTable.Routes.MapRoute(
 
 Мы могли бы сделать это и самостоятельно:
 
-```charp
+```
 RouteTable.Routes.Add(new Route(
 	url: "{controller}/{action}/{id}",
 	defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
@@ -59,8 +59,10 @@ ASP.NET 5 больше не использует модули, для обраб
 ```
 
 2. В файле `Startup.cs` добавляем использование пространства имен `Microsoft.AspNet.Routing`:
-			
-		using Microsoft.AspNet.Routing;
+
+```
+using Microsoft.AspNet.Routing;
+```
 
 3. Добавляем необходимые сервисы (сервисы, которые использует в своей работе система маршрутизации) в методе ConfigureServices() файла Startup.cs:
 
