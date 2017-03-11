@@ -15,7 +15,7 @@ tags: ASP-NET-5
 
 Типичный код настройки системы маршрутизации в MVC приложении:
 
-```
+```charp
 RouteTable.Routes.MapRoute(
 		name: "Default",
 		url: "{controller}/{action}/{id}",
@@ -29,7 +29,7 @@ RouteTable.Routes.MapRoute(
 
 Мы могли бы сделать это и самостоятельно:
 
-```
+```charp
 RouteTable.Routes.Add(new Route(
 	url: "{controller}/{action}/{id}",
 	defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
