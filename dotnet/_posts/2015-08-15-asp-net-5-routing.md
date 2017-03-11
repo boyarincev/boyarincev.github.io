@@ -329,9 +329,9 @@ public static IApplicationBuilder UseMvc(
 
 ```csharp
 routeBuilder.MapRoute("regexStringRoute", //name
-		      "api/rconstraint/{controller}", //template
-		      new { foo = "Bar" }, //defaults
-		      new { controller = new RegexRouteConstraint("^(my.*)$") }); //constraints
+	      "api/rconstraint/{controller}", //template
+	      new { foo = "Bar" }, //defaults
+	      new { controller = new RegexRouteConstraint("^(my.*)$") }); //constraints
 ```
 
 ## Attribute-Based маршрутизация
@@ -444,7 +444,9 @@ Route("[controller]/[*action]")
 
 Общая схема шаблона маршрута выглядит так:
 
-	constantPart-{variablePart}/{paramName:constraint1:constraint2=DefaultValue?}/{*lastGreedySegment}
+```csharp
+constantPart-{variablePart}/{paramName:constraint1:constraint2=DefaultValue?}/{*lastGreedySegment}
+```
 
 ## Заключение:
 
