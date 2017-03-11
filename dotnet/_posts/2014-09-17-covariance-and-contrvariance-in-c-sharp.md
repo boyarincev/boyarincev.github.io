@@ -290,9 +290,9 @@ namespace ConsoleApplication
 
 То есть привести переменную с типом `Func<Cat>` к переменной с типом `Func<Animal>`. Компилятор позволяет нам произвести такое присваивание из-за ключевого слова `out` у типа обобщения делегата Func:
 
-{% highlight C# %}	
-	delegate Func<out T>();
-{% endhighlight %}
+```charp
+delegate Func<out T>();
+```
 
 Это ключевое слово, говорит компилятору, что тип T будет использоваться только в качестве возвращаемого значения метода, а это значит для него разрешена ковариация (вместо типа возвращаемого значения мы можем возвратить производный тип).
 
@@ -314,10 +314,10 @@ void SomeMethod(T param)
 Пример:
 
 ```csharp
-	namespace ConsoleApplication
-	{
-	    class Animal
-	    {
+namespace ConsoleApplication
+{
+    class Animal
+    {
 
     }
 
@@ -388,7 +388,7 @@ IEnumerable<out T>
 ```csharp
 public interface IEnumerable<out T> : IEnumerable
 {
-IEnumerator<T> GetEnumerator();
+	IEnumerator<T> GetEnumerator();
 }
 ```
 
