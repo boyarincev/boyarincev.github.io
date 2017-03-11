@@ -15,13 +15,13 @@ tags: ASP-NET-5
 
 Типичный код настройки системы маршрутизации в MVC приложении:
 
-{% highlight C# %}
-	RouteTable.Routes.MapRoute(
-	                name: "Default",
-	                url: "{controller}/{action}/{id}",
-	                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-	            );
-{% endhighlight %}
+```charp
+RouteTable.Routes.MapRoute(
+		name: "Default",
+		url: "{controller}/{action}/{id}",
+		defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+	    );
+```
 
 Где [MapRoute](https://msdn.microsoft.com/ru-ru/library/Dd470521(v=VS.118).aspx) - extension-метод, объявленный в пространстве имен `System.Web.Mvc`, который добавлял в коллекцию маршрутов в свойстве `Routes` новый маршрут используя `MvcRouteHandler` в качестве обработчика.
 
@@ -29,13 +29,13 @@ tags: ASP-NET-5
 
 Мы могли бы сделать это и самостоятельно:
 
-{% highlight C# %}
-    RouteTable.Routes.Add(new Route(
-        url: "{controller}/{action}/{id}",
-        defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
-        routeHandler: new MvcRouteHandler())
-        );
-{% endhighlight %}
+```charp
+RouteTable.Routes.Add(new Route(
+url: "{controller}/{action}/{id}",
+defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
+routeHandler: new MvcRouteHandler())
+);
+```
 
 ## Как организована система маршрутизации в ASP.NET 5: Короткий вариант
 ASP.NET 5 больше не использует модули, для обработки запросов используются "middleware" введенные в рамках перехода на [OWIN](http://docs.asp.net/en/latest/fundamentals/owin.html) - "Open Web Interface" - позволяющей запускать ASP.NET 5 приложения не только на сервере IIS.
@@ -49,12 +49,14 @@ ASP.NET 5 больше не использует модули, для обраб
 0. Cоздайте пустой проект ASP.NET 5 (выбрав Empty Template) и назовите его "AspNet5Routing".
 
 1. Добавляем в зависимости ("dependencies") проекта в файле project.json "Microsoft.AspNet.Routing":
-	  
-		"dependencies": {
-		    "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
-		    "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
-		    "Microsoft.AspNet.Routing": "1.0.0-beta5"
-		  },
+
+```
+"dependencies": {
+    "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
+    "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
+    "Microsoft.AspNet.Routing": "1.0.0-beta5"
+  },
+```
 
 2. В файле `Startup.cs` добавляем использование пространства имен `Microsoft.AspNet.Routing`:
 			
@@ -62,63 +64,63 @@ ASP.NET 5 больше не использует модули, для обраб
 
 3. Добавляем необходимые сервисы (сервисы, которые использует в своей работе система маршрутизации) в методе ConfigureServices() файла Startup.cs:
 
-{% highlight C# %}
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddRouting();
-        }
-{% endhighlight %}
+```charp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddRouting();
+}
+```
 
 4. И наконец настраиваем систему маршрутизации в методе Configure() файла Startup.cs:
 
-{% highlight C# %}
-        public void Configure(IApplicationBuilder app)
-        {
-            var routeBuilder = new RouteBuilder();
-            routeBuilder.DefaultHandler = new ASPNET5RoutingHandler();
-            routeBuilder.ServiceProvider = app.ApplicationServices;
-            routeBuilder.MapRoute("default", "{controller}/{action}/{id}");
-            app.UseRouter(routeBuilder.Build());
-        }
-{% endhighlight %}
+```charp
+public void Configure(IApplicationBuilder app)
+{
+    var routeBuilder = new RouteBuilder();
+    routeBuilder.DefaultHandler = new ASPNET5RoutingHandler();
+    routeBuilder.ServiceProvider = app.ApplicationServices;
+    routeBuilder.MapRoute("default", "{controller}/{action}/{id}");
+    app.UseRouter(routeBuilder.Build());
+}
+```
 
 Взято из [примера в проекте маршрутизации](https://github.com/aspnet/Routing/blob/master/samples/RoutingSample.Web/Startup.cs).
 
 Разберем последний шаг подробнее:
 
-{% highlight C# %}
-    var routeBuilder = new RouteBuilder();
-    routeBuilder.DefaultHandler = new ASPNET5RoutingHandler();
-    routeBuilder.ServiceProvider = app.ApplicationServices;
-{% endhighlight %}
+```charp
+var routeBuilder = new RouteBuilder();
+routeBuilder.DefaultHandler = new ASPNET5RoutingHandler();
+routeBuilder.ServiceProvider = app.ApplicationServices;
+```
 
 Создаем экземпляр `RouteBuilder` и заполняем его свойства. Интерес вызывает свойство `DefaultHandler` с типом [IRouter](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/IRouter.cs) - судя по названию оно должно содержать обработчик запроса. Я помещаю в него экземпляр `ASPNET5RoutingHandler` - придуманного мною обработчика запросов, давайте создадим его:
 
-{% highlight C# %}
-	using Microsoft.AspNet.Routing;
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Threading.Tasks;
-	using Microsoft.AspNet.Http;
+```charp
+using Microsoft.AspNet.Routing;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Http;
 
-	namespace AspNet5Routing
+namespace AspNet5Routing
+{
+    public class ASPNET5RoutingHandler : IRouter
+    {
+	public VirtualPathData GetVirtualPath(VirtualPathContext context)
 	{
-	    public class ASPNET5RoutingHandler : IRouter
-	    {
-	        public VirtualPathData GetVirtualPath(VirtualPathContext context)
-	        {
-	            
-	        }
-	
-	        public async Task RouteAsync(RouteContext context)
-	        {
-	            await context.HttpContext.Response.WriteAsync("ASPNET5RoutingHandler work");
-	            context.IsHandled = true;
-	        }
-	    }
+
 	}
-{% endhighlight %}
+
+	public async Task RouteAsync(RouteContext context)
+	{
+	    await context.HttpContext.Response.WriteAsync("ASPNET5RoutingHandler work");
+	    context.IsHandled = true;
+	}
+    }
+}
+```
 
 Интерфейс `IRouter` требует от нас только два метода `GetVirtualPath` и `RouteAsync`.
 
@@ -146,29 +148,29 @@ ASP.NET 5 больше не использует модули, для обраб
 
 И наконец последняя строчка:
 
-{% highlight C# %}
-	app.UseRouter(routeBuilder.Build());
-{% endhighlight %}
+```charp
+app.UseRouter(routeBuilder.Build());
+```
 
 Вызов `routeBuilder.Build()` - создает экземпляр класса [RouteCollection](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/RouteCollection.cs) и добавляет в него все элементы из свойства `Route` класса `RouteBuilder`.
 
 А `app.UseRouter()` - [оказывается](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/BuilderExtensions.cs) extension-методом, который на самом деле, подключает [RouterMiddleware](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/RouterMiddleware.cs) в pipeline обработки запроса, передавая ему созданный и заполненный в методе `Build()` объект `RouteCollection`.
 
-{% highlight C# %}
-	public static IApplicationBuilder UseRouter([NotNull] this IApplicationBuilder builder, [NotNull] IRouter router)
-	{
-	    return builder.UseMiddleware<RouterMiddleware>(router);
-	}
-{% endhighlight %}
+```charp
+public static IApplicationBuilder UseRouter([NotNull] this IApplicationBuilder builder, [NotNull] IRouter router)
+{
+    return builder.UseMiddleware<RouterMiddleware>(router);
+}
+```
 
 И судя по конструктору `RouterMiddleware`:
 
-{% highlight C# %}
-    public RouterMiddleware(
-        RequestDelegate next,
-        ILoggerFactory loggerFactory,
-        IRouter router)
-{% endhighlight %}
+```charp
+public RouterMiddleware(
+RequestDelegate next,
+ILoggerFactory loggerFactory,
+IRouter router)
+```
 
 Объект `RouteCollection` тоже реализует интерфейс `IRouter`, как и `ASPNET5RoutingHandler` c `TemplateRoute`.
 
@@ -193,12 +195,14 @@ ASP.NET 5 больше не использует модули, для обраб
 Снова создадим пустой проект ASP.NET 5 используя Empty шаблон.
 
 1. Добавляем в зависимости ("dependencies") проекта в файле project.json "Microsoft.AspNet.Mvc":
-	  
-		"dependencies": {
-		    "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
-		    "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
-			"Microsoft.AspNet.Mvc": "6.0.0-beta5"
-		  },
+
+```
+"dependencies": {
+    "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
+    "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
+	"Microsoft.AspNet.Mvc": "6.0.0-beta5"
+  },
+```
 
 2. В файле `Startup.cs` добавляем использование пространства имен `Microsoft.AspNet.Builder`:
 			
@@ -208,12 +212,12 @@ ASP.NET 5 больше не использует модули, для обраб
 
 3. Добавляем сервисы, которые использует в своей работе MVC Framework: в методе ConfigureServices() файла Startup.cs:
 
-{% highlight C# %}
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
-        }
-{% endhighlight %}
+```charp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMvc();
+}
+```
 
 4. Настраиваем MVC приложение в методе Configure() файла Startup.cs:
 
@@ -221,93 +225,93 @@ ASP.NET 5 больше не использует модули, для обраб
 
 1.
 
-{% highlight C# %}
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseMvc()
-        }
-{% endhighlight %}
+```charp
+public void Configure(IApplicationBuilder app)
+{
+    app.UseMvc()
+}
+```
 
 2.
 
-{% highlight C# %}
-		public void Configure(IApplicationBuilder app)
-        {
-            app.UseMvcWithDefaultRoute()
-        }
-{% endhighlight %}
+```charp
+public void Configure(IApplicationBuilder app)
+{
+    app.UseMvcWithDefaultRoute()
+}
+```
  
 3.
 
-{% highlight C# %}
-		public void Configure(IApplicationBuilder app)
-        {
-            return app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-        }
-{% endhighlight %}
+```charp
+public void Configure(IApplicationBuilder app)
+{
+    return app.UseMvc(routes =>
+    {
+	routes.MapRoute(
+	    name: "default",
+	    template: "{controller=Home}/{action=Index}/{id?}");
+    });
+}
+```
 
 Давайте сразу посмотрим [реализацию этих методов](https://github.com/aspnet/Mvc/blob/master/src/Microsoft.AspNet.Mvc.Core/Builder/MvcApplicationBuilderExtensions.cs):
 
 Первый метод:
 
-{% highlight C# %}
-        public static IApplicationBuilder UseMvc(this IApplicationBuilder app)
-        {
-            return app.UseMvc(routes =>
-            {
-            });
-        }
-{% endhighlight %}
+```charp
+public static IApplicationBuilder UseMvc(this IApplicationBuilder app)
+{
+    return app.UseMvc(routes =>
+    {
+    });
+}
+```
 
 Вызывает третий метод, передавая делегат `Action<IRouteBuilder>` который ничего не делает.
 
 Второй метод:
 
-{% highlight C# %}
-        public static IApplicationBuilder UseMvcWithDefaultRoute(this IApplicationBuilder app)
-        {
-            return app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-        }
-{% endhighlight %}
+```charp
+public static IApplicationBuilder UseMvcWithDefaultRoute(this IApplicationBuilder app)
+{
+    return app.UseMvc(routes =>
+    {
+	routes.MapRoute(
+	    name: "default",
+	    template: "{controller=Home}/{action=Index}/{id?}");
+    });
+}
+```
 
 Тоже вызывает третий метод, только в делегате `Action<IRouteBuilder>` добавляется дефолтный маршрут.
 
 Третий метод:
 
-{% highlight C# %}
-        public static IApplicationBuilder UseMvc(
-            this IApplicationBuilder app,
-            Action<IRouteBuilder> configureRoutes)
-        {
-            MvcServicesHelper.ThrowIfMvcNotRegistered(app.ApplicationServices);
+```charp
+public static IApplicationBuilder UseMvc(
+    this IApplicationBuilder app,
+    Action<IRouteBuilder> configureRoutes)
+{
+    MvcServicesHelper.ThrowIfMvcNotRegistered(app.ApplicationServices);
 
-            var routes = new RouteBuilder
-            {
-                DefaultHandler = new MvcRouteHandler(),
-                ServiceProvider = app.ApplicationServices
-            };
+    var routes = new RouteBuilder
+    {
+	DefaultHandler = new MvcRouteHandler(),
+	ServiceProvider = app.ApplicationServices
+    };
 
-            configureRoutes(routes);
+    configureRoutes(routes);
 
-            // Adding the attribute route comes after running the user-code because
-            // we want to respect any changes to the DefaultHandler.
-            routes.Routes.Insert(0, AttributeRouting.CreateAttributeMegaRoute(
-                routes.DefaultHandler,
-                app.ApplicationServices));
+    // Adding the attribute route comes after running the user-code because
+    // we want to respect any changes to the DefaultHandler.
+    routes.Routes.Insert(0, AttributeRouting.CreateAttributeMegaRoute(
+	routes.DefaultHandler,
+	app.ApplicationServices));
 
-            return app.UseRouter(routes.Build());
-        }
-{% endhighlight %}
+    return app.UseRouter(routes.Build());
+}
+```
 
 Делает тоже самое, что и мы в предыдущем разделе при регистрации маршрута для своего обработчика, только устанавливает в качестве конечного обработчика экземпляр `MvcRouteHandler` и делает вызов метода `CreateAttributeMegaRoute` - который отвечает за добавление маршрутов устанавливаемых с помощью атрибутов у контроллеров и методов действий (Attribute-Based маршрутизация).
 
@@ -317,12 +321,12 @@ ASP.NET 5 больше не использует модули, для обраб
 
 Как я уже писал выше - настраивается с помощью вызова метода `MapRoute()` - и процесс использования этого метода не изменился со времен MVC 5 - в метод `MapRoute()` мы можем передать имя маршрута, его шаблон, значения по-умолчанию и ограничения.
 
-{% highlight C# %}
-	routeBuilder.MapRoute("regexStringRoute", //name
-	                      "api/rconstraint/{controller}", //template
-	                      new { foo = "Bar" }, //defaults
-	                      new { controller = new RegexRouteConstraint("^(my.*)$") }); //constraints
-{% endhighlight %}
+```charp
+routeBuilder.MapRoute("regexStringRoute", //name
+		      "api/rconstraint/{controller}", //template
+		      new { foo = "Bar" }, //defaults
+		      new { controller = new RegexRouteConstraint("^(my.*)$") }); //constraints
+```
 
 ## Attribute-Based маршрутизация
 
@@ -332,20 +336,20 @@ ASP.NET 5 больше не использует модули, для обраб
 
 Для задания маршрута нужно использовать атрибут `Route` как у методов действий, так и у контроллера (в MVC 5 для задания маршрута у контроллера использовался атрибут `RoutePrefix`).
 
-{% highlight C# %}
-    [Route("appointments")]
-    public class Appointments : ApplicationBaseController
+```charp
+[Route("appointments")]
+public class Appointments : ApplicationBaseController
+{
+[Route("check")]
+public IActionResult Index()
+{
+    return new ContentResult
     {
-        [Route("check")]
-        public IActionResult Index()
-        {
-            return new ContentResult
-            {
-                Content = "2 appointments available."
-            };
-        }
-    }
-{% endhighlight %}
+	Content = "2 appointments available."
+    };
+}
+}
+```
 
 В итоге данный метод действия будет доступен по адресу: "/appointments/check".
 
@@ -358,33 +362,33 @@ ASP.NET 5 больше не использует модули, для обраб
 
 Для удобства нам доступен метод расширения `ConfigureRouting`:
 
-{% highlight C# %}
-	public void ConfigureServices(IServiceCollection services)
+```charp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.ConfigureRouting(
+	routeOptions =>
 	{
-	    services.ConfigureRouting(
-	        routeOptions =>
-	        {
-	            routeOptions.LowercaseUrls = true; // генерация url в нижнем регистре
-	            routeOptions.AppendTrailingSlash = true; // добавление слеша в конец url
-	        });
-	}
-{% endhighlight %}
+	    routeOptions.LowercaseUrls = true; // генерация url в нижнем регистре
+	    routeOptions.AppendTrailingSlash = true; // добавление слеша в конец url
+	});
+}
+```
 
 "За кулисами" он просто делает вызов метода `Configure` передавая в него делегат `Action<RouteOptions>`:
 
-{% highlight C# %}
-    public static void ConfigureRouting(
-        this IServiceCollection services,
-        Action<RouteOptions> setupAction)
-    {
-        if (setupAction == null)
-        {
-            throw new ArgumentNullException(nameof(setupAction));
-        }
+```charp
+public static void ConfigureRouting(
+this IServiceCollection services,
+Action<RouteOptions> setupAction)
+{
+if (setupAction == null)
+{
+    throw new ArgumentNullException(nameof(setupAction));
+}
 
-        services.Configure(setupAction);
-    }
-{% endhighlight %}
+services.Configure(setupAction);
+}
+```
 
 ## Шаблон маршрута
 Принципы работы с шаблоном маршрута остались теми же, что были и в MVC 5:
@@ -411,26 +415,26 @@ ASP.NET 5 больше не использует модули, для обраб
 
 То есть, разрешается:
 
-{% highlight C# %}
-	Route("[controller]/[action]/{id?}")
-	Route("[controller]/[action]")
-{% endhighlight %}
+```charp
+Route("[controller]/[action]/{id?}")
+Route("[controller]/[action]")
+```
 
 Можно использовать их по отдельности:
 
-{% highlight C# %}
-	Route("[controller]")
-	Route("[action]")
-{% endhighlight %}
+```charp
+Route("[controller]")
+Route("[action]")
+```
 
 Не разрешаются:
 
-{% highlight C# %}
-	Route("{controller}/{action}")
-	Route("[controller=Home]/[action]")
-	Route("[controller?]/[action]")
-	Route("[controller]/[*action]")
-{% endhighlight %}
+```charp
+Route("{controller}/{action}")
+Route("[controller=Home]/[action]")
+Route("[controller?]/[action]")
+Route("[controller]/[*action]")
+```
 
 Общая схема шаблона маршрута выглядит так:
 
