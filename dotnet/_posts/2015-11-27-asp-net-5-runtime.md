@@ -79,17 +79,19 @@ DNVM устанавливает DNX'ы из NuGet feed настроенного 
 
 Код нашего приложения:
 
-	namespace ConsoleApp
-	{
-	    public class Program
-	    {
-	        public static void Main(string[] args)
-	        {
-	            Console.WriteLine("Hello World");
-	            Console.ReadLine();
-	        }
-	    }
-	}
+```csharp
+namespace ConsoleApp
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World");
+            Console.ReadLine();
+        }
+    }
+}
+```
 
 Код выглядит абсолютно идентично обычному консольному приложению.
 
@@ -134,10 +136,12 @@ Microsoft.DNX.ApplicationHost - последний слой DNX, все что �
 
 Шаблон веб-приложения ASP.NET 5 включает набор команд [(docs.asp.net: Using Commands)](https://docs.asp.net/en/latest/dnx/commands.html), определенных в project.json файле и команда `web` одна из них:
 
-	  "commands": {
-	    "web": "Microsoft.AspNet.Server.Kestrel",
-	    "ef": "EntityFramework.Commands"
-	  },
+```
+"commands": {
+    "web": "Microsoft.AspNet.Server.Kestrel",
+    "ef": "EntityFramework.Commands"
+},
+```
 
 Команды, на самом деле, только устанавливают дополнительные аргументы для `dnx.exe` и когда вы набираете `dnx web` для запуска веб-приложения, в реальности это преобразуется в:
 
@@ -159,20 +163,22 @@ Microsoft.DNX.ApplicationHost - последний слой DNX, все что �
 
 Слой хостинга также ответственен за запуск стартовой логики [(docs.asp.net: Application Startup)](https://docs.asp.net/en/latest/fundamentals/startup.html) веб-приложения [(github.com/aspnet/Hosting: Microsoft.AspNet.Hosting/WebApplication.cs#L56)](https://github.com/aspnet/Hosting/blob/1.0.0-rc1/src/Microsoft.AspNet.Hosting/WebApplication.cs#L56). Раньше она находилась в файле Global.asax, теперь по умолчанию находится в классе Startup и состоит из Configure метода, используемого для построения конвейера обработки запросов и ConfigureServices метода, используемого для настройки сервисов веб-приложения.
 
-	namespace WebApplication1
-	{
-	  public class Startup
-	  {
-	    public void ConfigureService(IServiceCollection services)
-	    {
-	      // Добавьте сервисы для вашего приложения здесь
-	    }
-	    public void Configure(IApplicationBuilder app)
-	    {
-	      // Настройте конвейер обработки запросов здесь
-	    }
-	  }
-	}
+```csharp
+namespace WebApplication1
+{
+    public class Startup
+    {
+        public void ConfigureService(IServiceCollection services)
+        {
+          // Добавьте сервисы для вашего приложения здесь
+        }
+        public void Configure(IApplicationBuilder app)
+        {
+          // Настройте конвейер обработки запросов здесь
+        }
+    }
+}
+```
 
 Для построения конвейера обработки запросов в Configure методе используется интерфейс IApplicationBuilder. IApplicationBuilder позволяет зарегистрировать request delegate ("Use" метод) и зарегистрировать middleware ("UseMiddleware" метод) в конвейере обработки запросов.
 
@@ -184,28 +190,34 @@ Request delegate - это ключевая концепция ASP.NET 5. Request
 
 В качестве упрощения регистрации в конвейере обработки запросов request delegate не вызывающего следующий request delegate, вы можете использовать Run extension метод IApplicationBuilder.
 
-	    public void Configure(IApplicationBuilder app)
-	    {
-			app.Run(async context => await context.Response.WriteAsync("Hello, world!"));
-	    }
+```csharp
+public void Configure(IApplicationBuilder app)
+{
+    app.Run(async context => await context.Response.WriteAsync("Hello, world!"));
+}
+```
 
 Того же самого можно достичь используя Use extension метод и не вызывая следующий request delegate:
 
-	    public void Configure(IApplicationBuilder app)
-	    {
-			app.Use(next => async context => await context.Response.WriteAsync("Hello, world!"));
-	    }
+```csharp
+public void Configure(IApplicationBuilder app)
+{
+    app.Use(next => async context => await context.Response.WriteAsync("Hello, world!"));
+}
+```
 
 И пример с вызовом следующего в цепочке request delegate:
 
-	    public void Configure(IApplicationBuilder app)
-	    {
-            app.Use(next => async context =>
-                {
-                    await context.Response.WriteAsync("Hello, world!");
-                    await next.Invoke(context);
-                });
-	    }
+```csharp
+public void Configure(IApplicationBuilder app)
+{
+    app.Use(next => async context =>
+        {
+            await context.Response.WriteAsync("Hello, world!");
+            await next.Invoke(context);
+        });
+}
+```
 
 Для того, чтобы request delegate было удобно переиспользовать, можно оформить его в виде ASP.NET 5 middleware [(docs.asp.net: Middleware)](https://docs.asp.net/en/latest/fundamentals/middleware.html).
 
@@ -216,77 +228,93 @@ Middleware ASP.NET 5 - это обычный класс, следующий оп
 
 Пример middleware:
 
-	using Microsoft.AspNet.Builder;
-	using Microsoft.AspNet.Http;
-	using System.Threading.Tasks;
-	public class XHttpHeaderOverrideMiddleware
-	{
-	  private readonly RequestDelegate _next;
-	  public XHttpHeaderOverrideMiddleware(RequestDelegate next)
-	  {
-	    _next = next;
-	  }
-	  public Task Invoke(HttpContext httpContext)
-	  {
-	    var headerValue =
-	      httpContext.Request.Headers["X-HTTP-Method-Override"];
-	    var queryValue =
-	      httpContext.Request.Query["X-HTTP-Method-Override"];
-	    if (!string.IsNullOrEmpty(headerValue))
-	    {
-	      httpContext.Request.Method = headerValue;
-	    }
-	    else if (!string.IsNullOrEmpty(queryValue))
-	    {
-	      httpContext.Request.Method = queryValue;
-	    }
-	    return _next.Invoke(httpContext);
-	  }
-	}
+```csharp
+using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Http;
+using System.Threading.Tasks;
+public class XHttpHeaderOverrideMiddleware
+{
+    private readonly RequestDelegate _next;
+    
+    public XHttpHeaderOverrideMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+    
+    public Task Invoke(HttpContext httpContext)
+    {
+        var headerValue =
+          httpContext.Request.Headers["X-HTTP-Method-Override"];
+        var queryValue =
+          httpContext.Request.Query["X-HTTP-Method-Override"];
+        
+        if (!string.IsNullOrEmpty(headerValue))
+        {
+            httpContext.Request.Method = headerValue;
+        }
+        else if (!string.IsNullOrEmpty(queryValue))
+        {
+            httpContext.Request.Method = queryValue;
+        }
+
+        return _next.Invoke(httpContext);
+    }
+}
+```
 
 Вызов следующего (если вы хотите вызвать следующий) в цепочке request delegate должен осуществляться внутри Invoke метода. Если вы разместите какую-нибудь логику ниже вызова следующего request delegate, то она будет выполнена после того, как все следующие за вашим обработчики входящего запроса отработают.
 
 В конвейер обработки запросов вы можете включить middleware следующее этому соглашению с помощью `UseMiddleware<T>` extension метода IApplicationBuilder:
 
-    public void Configure(IApplicationBuilder app)
-    {
-      app.UseMiddleware<XHttpHeaderOverrideMiddleware>();
-    }
+```csharp
+public void Configure(IApplicationBuilder app)
+{
+    app.UseMiddleware<XHttpHeaderOverrideMiddleware>();
+}
+```
 
 Любые параметры, переданные в этот метод, будут внедрены в конструктор middleware после `RequestDelegate next` и запрошенных сервисов:
 
 Конструктор middleware, принимающий дополнительно сервисы и параметры:
 
-    public XHttpHeaderOverrideMiddleware(RequestDelegate next, SomeServise1 service1, 
-		SomeServise2 service2, string param1, bool param2)
-    {
-      _next = next;
-    }
+```csharp
+public XHttpHeaderOverrideMiddleware(RequestDelegate next, SomeServise1 service1, 
+    SomeServise2 service2, string param1, bool param2)
+{
+    _next = next;
+}
+```
 	
 Включение middleware в конвейер обработки запросов и передача ему параметров:
 
-    public void Configure(IApplicationBuilder app)
-    {
-      app.UseMiddleware<XHttpHeaderOverrideMiddleware>(param1, param2);
-    }
+```csharp
+public void Configure(IApplicationBuilder app)
+{
+    app.UseMiddleware<XHttpHeaderOverrideMiddleware>(param1, param2);
+}
+```
 
 По-соглашению, включение middleware в цепочку вызовов следует оформлять в виде "Use..." extension метода у IApplicationBuilder:
 
-	public static class BuilderExtensions
-	{
-	  public static IApplicationBuilder UseXHttpHeaderOverride(
-	    this IApplicationBuilder builder)
-	  {
-	    return builder.UseMiddleware<XHttpHeaderOverrideMiddleware>();
-	  }
-	}
+```csharp
+public static class BuilderExtensions
+{
+    public static IApplicationBuilder UseXHttpHeaderOverride(
+        this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<XHttpHeaderOverrideMiddleware>();
+    }
+}
+```
 
 Чтобы включить этот middleware в конвейер обработки запросов, вам необходимо вызвать этот extension метод в Configure методе:
 
-	public void Configure(IApplicationBuilder app)
-	{
-		app.UseXHttpHeaderOverride();
-	}
+```csharp
+public void Configure(IApplicationBuilder app)
+{
+    app.UseXHttpHeaderOverride();
+}
+```
 
 ASP.NET 5 поставляется с большим набором встроенных middleware. Есть middleware для работы с файлами [(docs.asp.net: Working with Static Files)](https://docs.asp.net/en/latest/fundamentals/static-files.html), маршрутизации [(docs.asp.net: Routing)](https://docs.asp.net/en/latest/fundamentals/routing.html), обработки ошибок, диагностики [(docs.asp.net: Diagnostics)](https://docs.asp.net/en/latest/fundamentals/diagnostics.html) и безопасности. Middleware поставляются как NuGet пакеты через nuget.org.
 
@@ -316,11 +344,13 @@ Startup класс также поддерживает внедрение зав
 
 Обычно фреймворки и библиотеки предоставляют "Add..." extension метод у IServiceCollection для добавления их сервисов в IoC-контейнер. Например, добавление сервисов используемых ASP.NET MVC 6 производится так:
 
-	public void ConfigureServices(IServiceCollection services)
-	{
-	  // Добавление сервисов MVC
-	  services.AddMvc();
-	}
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    // Добавление сервисов MVC
+    services.AddMvc();
+}
+```
 
 Вы можете добавлять собственные сервисы в IoC-контейнер. Добавляемые сервисы могут быть одними из трех типов: transient (AddTransient метод IServiceCollection ), scoped (AddScoped метод IServiceCollection ) или singleton (AddSingleton метод IServiceCollection ). Transient сервисы создаются при каждом их запросе из контейнера. Scoped сервисы создаются, только если они еще не создавались в текущем scope. В веб-приложениях scope-контейнер создается для каждого запроса, поэтому можно думать о них как о сервисах, создаваемых для каждого http-запроса. Singleton сервисы создаются только один раз за цикл жизни приложения.
 
@@ -332,54 +362,66 @@ Web.config и app.config файлы больше не поддерживаютс
 
 Пример файла appsettings.json:
 
-	{
-	  "Name": "Stas",
-	  "Surname": "Boyarincev"
-	}
+```
+{
+    "Name": "Stas",
+    "Surname": "Boyarincev"
+}
+```
 
 Пример получения конфигурации приложения, используя Configuration API:
 
-	var builder = new ConfigurationBuilder()
-	            .AddJsonFile("appsettings.json")
-	            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-				.AddEnvironmentVariables();
+```csharp
+var builder = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
 
-    var Configuration = builder.Build();
+var Configuration = builder.Build();
+```
 
 Запросить данные, вы можете используя метод GetSection и имя настройки:
 
-	var name = Configuration.GetSection("name");
-	var surname = Configuration.GetSection("surname");
+```csharp
+var name = Configuration.GetSection("name");
+var surname = Configuration.GetSection("surname");
+```
 
 Работать с Configuration API рекомендуется в Startup классе, а в дальнейшем разделять настройки на небольшие наборы данных, соответствующие какой-либо функциональности и передавать другим частям приложения с помощью механизма Options [(docs.asp.net: Using Options and configuration objects)](https://docs.asp.net/en/latest/fundamentals/configuration.html#using-options-and-configuration-objects).
 
 Механизм Options позволяют использовать Plain Old CLR Object (POCO) классы в качестве объектов с настройками. Вы можете добавить его в ваше приложение, вызвав AddOptions extension-метод у IServiceCollection в ConfigureServices методе:
 
-	public void ConfigureServices(IServiceCollection services)
-	{
-		//добавляем механизм Options в приложение
-		services.AddOptions();
-	}
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    //добавляем механизм Options в приложение
+    services.AddOptions();
+}
+```
 
 Фактически, вызов AddOptions добавляет `IOptions<TOption>` в систему внедрения зависимостей. Этот сервис может быть использован для получения Options разных типов везде, где внедрение зависимостей доступно (достаточно лишь запросить из нее `IOption<TOption>`, где TOption POCO класс с нужными вам настройками).
 
 Для регистрации вашей options вы можете использовать `Configure<TOption>` extension-метод IServiceCollection:
 
-	public void ConfigureServices(IServiceCollection services)
-	{
-		services.Configure<MvcOptions>(options => options.Filters.Add(
-		  new MyGlobalFilter()));
-	}
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.Configure<MvcOptions>(options => options.Filters.Add(
+      new MyGlobalFilter()));
+}
+```
 
 В пример выше MvcOptions - это класс [(github.com/aspnet/Mvc: Microsoft.AspNet.Mvc.Core/MvcOptions.cs)](https://github.com/aspnet/Mvc/blob/6.0.0-rc1/src/Microsoft.AspNet.Mvc.Core/MvcOptions.cs), который MVC-фреймворк использует для получения от пользователя своих настроек.
 
 Вы также можете легко передать часть конфигурационных настроек в options:
 
-	public void ConfigureServices(IServiceCollection services)
-	{
-		//Configuration - конфигурация приложения полученная в примерах выше
-		services.Configure<MyOptions>(Configuration);
-	}
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    //Configuration - конфигурация приложения полученная в примерах выше
+    services.Configure<MyOptions>(Configuration);
+}
+```
 
 В этом случае ключи настроек из конфигурации будут мапиться на имена свойств POCO класса настроек.
 
@@ -393,20 +435,22 @@ Web.config и app.config файлы больше не поддерживаютс
 
 Например feature интерфейс для Http request:
 
-	namespace Microsoft.AspNet.Http.Features
-	{
-	    public interface IHttpRequestFeature
-	    {
-	        string Protocol { get; set; }
-	        string Scheme { get; set; }
-	        string Method { get; set; }
-	        string PathBase { get; set; }
-	        string Path { get; set; }
-	        string QueryString { get; set; }
-	        IHeaderDictionary Headers { get; set; }
-	        Stream Body { get; set; }
-	    }
-	}
+```csharp
+namespace Microsoft.AspNet.Http.Features
+{
+    public interface IHttpRequestFeature
+    {
+        string Protocol { get; set; }
+        string Scheme { get; set; }
+        string Method { get; set; }
+        string PathBase { get; set; }
+        string Path { get; set; }
+        string QueryString { get; set; }
+        IHeaderDictionary Headers { get; set; }
+        Stream Body { get; set; }
+    }
+}
+```
 
 Веб-сервер использует feature интерфейсы для раскрытия низкоуровневой функциональности уровню хостинга. А он в свою очередь делает доступными их всему приложению через `HttpContext`. Это позволяет разорвать тесные связи между уровнем веб-сервера и хостинга и разместить приложение на различных веб-серверах. ASP.NET 5 поставляется с встроенной поддержкой IIS, оберткой над HTTP.SYS ([Microsoft.AspNet.Server.Web­Listener](https://www.nuget.org/packages/Microsoft.AspNet.Server.WebListener)) и новым кроссплатформенным веб-сервером под названием Kestrel [(github.com/aspnet/KestrelHttpServer)](https://github.com/aspnet/KestrelHttpServer).
 
