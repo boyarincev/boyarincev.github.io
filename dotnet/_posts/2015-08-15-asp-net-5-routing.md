@@ -15,12 +15,12 @@ tags: ASP-NET-5
 
 Типичный код настройки системы маршрутизации в MVC приложении:
 
-```charp
+```csharp
 RouteTable.Routes.MapRoute(
-		name: "Default",
-		url: "{controller}/{action}/{id}",
-		defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-	    );
+	name: "Default",
+	url: "{controller}/{action}/{id}",
+	defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+    );
 ```
 
 Где [MapRoute](https://msdn.microsoft.com/ru-ru/library/Dd470521(v=VS.118).aspx) - extension-метод, объявленный в пространстве имен `System.Web.Mvc`, который добавлял в коллекцию маршрутов в свойстве `Routes` новый маршрут используя `MvcRouteHandler` в качестве обработчика.
@@ -29,7 +29,7 @@ RouteTable.Routes.MapRoute(
 
 Мы могли бы сделать это и самостоятельно:
 
-```charp
+```csharp
 RouteTable.Routes.Add(new Route(
 	url: "{controller}/{action}/{id}",
 	defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
@@ -60,13 +60,13 @@ ASP.NET 5 больше не использует модули, для обраб
 
 2. В файле `Startup.cs` добавляем использование пространства имен `Microsoft.AspNet.Routing`:
 
-```
+```csharp
 using Microsoft.AspNet.Routing;
 ```
 
 3. Добавляем необходимые сервисы (сервисы, которые использует в своей работе система маршрутизации) в методе ConfigureServices() файла Startup.cs:
 
-```charp
+```csharp
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddRouting();
@@ -75,7 +75,7 @@ public void ConfigureServices(IServiceCollection services)
 
 4. И наконец настраиваем систему маршрутизации в методе Configure() файла Startup.cs:
 
-```charp
+```csharp
 public void Configure(IApplicationBuilder app)
 {
     var routeBuilder = new RouteBuilder();
@@ -90,7 +90,7 @@ public void Configure(IApplicationBuilder app)
 
 Разберем последний шаг подробнее:
 
-```charp
+```csharp
 var routeBuilder = new RouteBuilder();
 routeBuilder.DefaultHandler = new ASPNET5RoutingHandler();
 routeBuilder.ServiceProvider = app.ApplicationServices;
@@ -98,7 +98,7 @@ routeBuilder.ServiceProvider = app.ApplicationServices;
 
 Создаем экземпляр `RouteBuilder` и заполняем его свойства. Интерес вызывает свойство `DefaultHandler` с типом [IRouter](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/IRouter.cs) - судя по названию оно должно содержать обработчик запроса. Я помещаю в него экземпляр `ASPNET5RoutingHandler` - придуманного мною обработчика запросов, давайте создадим его:
 
-```charp
+```csharp
 using Microsoft.AspNet.Routing;
 using System;
 using System.Collections.Generic;
@@ -132,7 +132,9 @@ namespace AspNet5Routing
 
 Следующая строка метода `Configure`:
 
-	routeBuilder.MapRoute("default", "{controller}/{action}/{id}");
+```csharp
+routeBuilder.MapRoute("default", "{controller}/{action}/{id}");
+```
 
 Как две капли воды, похожа на использование метода `MapRoute` в MVC 5, его параметры - название добавляемого маршрута и шаблон с которым будет сопоставляться запрашиваемый Url.
 
@@ -150,7 +152,7 @@ namespace AspNet5Routing
 
 И наконец последняя строчка:
 
-```charp
+```csharp
 app.UseRouter(routeBuilder.Build());
 ```
 
@@ -158,7 +160,7 @@ app.UseRouter(routeBuilder.Build());
 
 А `app.UseRouter()` - [оказывается](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/BuilderExtensions.cs) extension-методом, который на самом деле, подключает [RouterMiddleware](https://github.com/aspnet/Routing/blob/master/src/Microsoft.AspNet.Routing/RouterMiddleware.cs) в pipeline обработки запроса, передавая ему созданный и заполненный в методе `Build()` объект `RouteCollection`.
 
-```charp
+```csharp
 public static IApplicationBuilder UseRouter([NotNull] this IApplicationBuilder builder, [NotNull] IRouter router)
 {
     return builder.UseMiddleware<RouterMiddleware>(router);
@@ -167,11 +169,11 @@ public static IApplicationBuilder UseRouter([NotNull] this IApplicationBuilder b
 
 И судя по конструктору `RouterMiddleware`:
 
-```charp
+```csharp
 public RouterMiddleware(
-RequestDelegate next,
-ILoggerFactory loggerFactory,
-IRouter router)
+	RequestDelegate next,
+	ILoggerFactory loggerFactory,
+	IRouter router)
 ```
 
 Объект `RouteCollection` тоже реализует интерфейс `IRouter`, как и `ASPNET5RoutingHandler` c `TemplateRoute`.
@@ -214,7 +216,7 @@ IRouter router)
 
 3. Добавляем сервисы, которые использует в своей работе MVC Framework: в методе ConfigureServices() файла Startup.cs:
 
-```charp
+```csharp
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddMvc();
@@ -227,7 +229,7 @@ public void ConfigureServices(IServiceCollection services)
 
 1.
 
-```charp
+```csharp
 public void Configure(IApplicationBuilder app)
 {
     app.UseMvc()
@@ -236,7 +238,7 @@ public void Configure(IApplicationBuilder app)
 
 2.
 
-```charp
+```csharp
 public void Configure(IApplicationBuilder app)
 {
     app.UseMvcWithDefaultRoute()
@@ -245,7 +247,7 @@ public void Configure(IApplicationBuilder app)
  
 3.
 
-```charp
+```csharp
 public void Configure(IApplicationBuilder app)
 {
     return app.UseMvc(routes =>
@@ -261,7 +263,7 @@ public void Configure(IApplicationBuilder app)
 
 Первый метод:
 
-```charp
+```csharp
 public static IApplicationBuilder UseMvc(this IApplicationBuilder app)
 {
     return app.UseMvc(routes =>
@@ -274,7 +276,7 @@ public static IApplicationBuilder UseMvc(this IApplicationBuilder app)
 
 Второй метод:
 
-```charp
+```csharp
 public static IApplicationBuilder UseMvcWithDefaultRoute(this IApplicationBuilder app)
 {
     return app.UseMvc(routes =>
@@ -290,7 +292,7 @@ public static IApplicationBuilder UseMvcWithDefaultRoute(this IApplicationBuilde
 
 Третий метод:
 
-```charp
+```csharp
 public static IApplicationBuilder UseMvc(
     this IApplicationBuilder app,
     Action<IRouteBuilder> configureRoutes)
@@ -323,7 +325,7 @@ public static IApplicationBuilder UseMvc(
 
 Как я уже писал выше - настраивается с помощью вызова метода `MapRoute()` - и процесс использования этого метода не изменился со времен MVC 5 - в метод `MapRoute()` мы можем передать имя маршрута, его шаблон, значения по-умолчанию и ограничения.
 
-```charp
+```csharp
 routeBuilder.MapRoute("regexStringRoute", //name
 		      "api/rconstraint/{controller}", //template
 		      new { foo = "Bar" }, //defaults
@@ -338,18 +340,18 @@ routeBuilder.MapRoute("regexStringRoute", //name
 
 Для задания маршрута нужно использовать атрибут `Route` как у методов действий, так и у контроллера (в MVC 5 для задания маршрута у контроллера использовался атрибут `RoutePrefix`).
 
-```charp
+```csharp
 [Route("appointments")]
 public class Appointments : ApplicationBaseController
 {
-[Route("check")]
-public IActionResult Index()
-{
-    return new ContentResult
-    {
-	Content = "2 appointments available."
-    };
-}
+	[Route("check")]
+	public IActionResult Index()
+	{
+	    return new ContentResult
+	    {
+		Content = "2 appointments available."
+	    };
+	}
 }
 ```
 
@@ -364,7 +366,7 @@ public IActionResult Index()
 
 Для удобства нам доступен метод расширения `ConfigureRouting`:
 
-```charp
+```csharp
 public void ConfigureServices(IServiceCollection services)
 {
     services.ConfigureRouting(
@@ -378,17 +380,17 @@ public void ConfigureServices(IServiceCollection services)
 
 "За кулисами" он просто делает вызов метода `Configure` передавая в него делегат `Action<RouteOptions>`:
 
-```charp
+```csharp
 public static void ConfigureRouting(
-this IServiceCollection services,
-Action<RouteOptions> setupAction)
+	this IServiceCollection services,
+	Action<RouteOptions> setupAction)
 {
-if (setupAction == null)
-{
-    throw new ArgumentNullException(nameof(setupAction));
-}
+	if (setupAction == null)
+	{
+	    throw new ArgumentNullException(nameof(setupAction));
+	}
 
-services.Configure(setupAction);
+	services.Configure(setupAction);
 }
 ```
 
@@ -417,21 +419,21 @@ services.Configure(setupAction);
 
 То есть, разрешается:
 
-```charp
+```csharp
 Route("[controller]/[action]/{id?}")
 Route("[controller]/[action]")
 ```
 
 Можно использовать их по отдельности:
 
-```charp
+```csharp
 Route("[controller]")
 Route("[action]")
 ```
 
 Не разрешаются:
 
-```charp
+```csharp
 Route("{controller}/{action}")
 Route("[controller=Home]/[action]")
 Route("[controller?]/[action]")
