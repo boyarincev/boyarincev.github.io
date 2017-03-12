@@ -197,19 +197,19 @@ namespace ConsoleApplication
 
     class Program
     {
-	delegate Animal delegateAnimal();
+        delegate Animal delegateAnimal();
 
-	static void Main(string[] args)
-	{
-	    var param = new Program();
-	    delegateAnimal dA = MethodCat;
-			Animal result = dA();
-	}
+        static void Main(string[] args)
+        {
+            var param = new Program();
+            delegateAnimal dA = MethodCat;
+                Animal result = dA();
+        }
 
-	static Cat MethodCat()
-	{
-	    return new Cat();
-	}
+        static Cat MethodCat()
+        {
+            return new Cat();
+        }
     }
 }
 ```
@@ -259,27 +259,26 @@ namespace ConsoleApplication
 
     class Program
     {
+        static void Main(string[] args)
+        {
+            Func<Animal> fA = MethodCat;
+            Func<Cat> fC = MethodCat;
 
-	static void Main(string[] args)
-	{
-	    Func<Animal> fA = MethodCat;
-	    Func<Cat> fC = MethodCat;
-
-	    fA = fC; // работает
-	    // fC = fA; // ошибка компиляции
-			Animal result = fA(); // вызывается метод MethodCat(), а возвращаемое значение с типом Cat приводится к Animal
-	}
+            fA = fC; // работает
+            // fC = fA; // ошибка компиляции
+                Animal result = fA(); // вызывается метод MethodCat(), а возвращаемое значение с типом Cat приводится к Animal
+        }
 
 
-	static Cat MethodCat()
-	{
-	    return new Cat();
-	}
+        static Cat MethodCat()
+        {
+            return new Cat();
+        }
 
-	static Animal MethodAnimal()
-	{
-	    return new Animal();
-	}
+        static Animal MethodAnimal()
+        {
+            return new Animal();
+        }
     }
 }
 ```
@@ -328,27 +327,26 @@ namespace ConsoleApplication
 
     class Program
     {
+        static void Main(string[] args)
+        {
+            Action<Animal> fA = MethodAnimal;
+            Action<Cat> fC = MethodAnimal;
 
-	static void Main(string[] args)
-	{
-	    Action<Animal> fA = MethodAnimal;
-	    Action<Cat> fC = MethodAnimal;
-
-	    fC = fA; // работает
-	    // fA = fC; //ошибка компиляции
-			fC(new Cat()); // вызывается метод MethodAnimal(), а Cat приводится к Animal
-	}
+            fC = fA; // работает
+            // fA = fC; //ошибка компиляции
+                fC(new Cat()); // вызывается метод MethodAnimal(), а Cat приводится к Animal
+        }
 
 
-	static void MethodCat(Cat param)
-	{
+        static void MethodCat(Cat param)
+        {
 
-	}
+        }
 
-	static void MethodAnimal(Animal param)
-	{
+        static void MethodAnimal(Animal param)
+        {
 
-	}
+        }
     }
 }
 ```
@@ -420,33 +418,27 @@ namespace ConsoleApplication
 
     interface IZoo<in T>
     {
-	void PutZoo(T zoo);
+	    void PutZoo(T zoo);
     }
 
     class ZooAnimal : IZoo<Animal>
     {
-	public void PutZoo(Animal zoo)
-	{
-
-	}
+	    public void PutZoo(Animal zoo)
     }
 
     class ZooCat : IZoo<Cat>
     {
-	public void PutZoo(Cat zoo)
-	{
-
-	}
+	    public void PutZoo(Cat zoo)
     }
 
     class Program
     {
-	static void Main(string[] args)
-	{
-	    IZoo<Animal> zooAnimal = new ZooAnimal();
-	    IZoo<Cat> zooCat = zooAnimal;
-	    zooCat.PutZoo(new Cat());
-	}
+        static void Main(string[] args)
+        {
+            IZoo<Animal> zooAnimal = new ZooAnimal();
+            IZoo<Cat> zooCat = zooAnimal;
+            zooCat.PutZoo(new Cat());
+        }
     }
 }
 ```
