@@ -136,7 +136,7 @@ Microsoft.DNX.ApplicationHost - последний слой DNX, все что �
 
 Шаблон веб-приложения ASP.NET 5 включает набор команд [(docs.asp.net: Using Commands)](https://docs.asp.net/en/latest/dnx/commands.html), определенных в project.json файле и команда `web` одна из них:
 
-```
+```json
 "commands": {
     "web": "Microsoft.AspNet.Server.Kestrel",
     "ef": "EntityFramework.Commands"
@@ -362,7 +362,7 @@ Web.config и app.config файлы больше не поддерживаютс
 
 Пример файла appsettings.json:
 
-```
+```json
 {
     "Name": "Stas",
     "Surname": "Boyarincev"
