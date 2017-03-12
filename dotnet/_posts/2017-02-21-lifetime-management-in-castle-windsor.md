@@ -18,7 +18,7 @@ published: false
 
 Давайте рассмотрим пример:
 
-```
+```csharp
 public class UnitOfWork
 {
    public void Init()
