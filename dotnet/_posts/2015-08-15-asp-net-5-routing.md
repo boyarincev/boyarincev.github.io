@@ -48,7 +48,7 @@ ASP.NET 5 больше не использует модули, для обраб
 
 1. Добавляем в зависимости ("dependencies") проекта в файле project.json "Microsoft.AspNet.Routing":
 
-```
+```json
 "dependencies": {
     "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
     "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
@@ -200,7 +200,7 @@ public RouterMiddleware(
 
 1. Добавляем в зависимости ("dependencies") проекта в файле project.json "Microsoft.AspNet.Mvc":
 
-```
+```json
 "dependencies": {
     "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
     "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
