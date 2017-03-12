@@ -395,7 +395,7 @@ public interface IEnumerable<out T> : IEnumerable
 ```csharp
 public interface IEnumerator<out T> : IDisposable, IEnumerator
 {
-T Current { get; }
+    T Current { get; }
 }
 ```
 
