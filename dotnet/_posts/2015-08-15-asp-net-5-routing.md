@@ -19,8 +19,7 @@ tags: ASP-NET-5
 RouteTable.Routes.MapRoute(
     name: "Default",
     url: "{controller}/{action}/{id}",
-    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-    );
+    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional });
 ```
 
 Где [MapRoute](https://msdn.microsoft.com/ru-ru/library/Dd470521(v=VS.118).aspx) - extension-метод, объявленный в пространстве имен `System.Web.Mvc`, который добавлял в коллекцию маршрутов в свойстве `Routes` новый маршрут используя `MvcRouteHandler` в качестве обработчика.
@@ -33,8 +32,7 @@ RouteTable.Routes.MapRoute(
 RouteTable.Routes.Add(new Route(
     url: "{controller}/{action}/{id}",
     defaults: new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
-    routeHandler: new MvcRouteHandler())
-);
+    routeHandler: new MvcRouteHandler()));
 ```
 
 ## Как организована система маршрутизации в ASP.NET 5: Короткий вариант
@@ -55,7 +53,7 @@ ASP.NET 5 больше не использует модули, для обраб
     "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
     "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
     "Microsoft.AspNet.Routing": "1.0.0-beta5"
-  },
+},
 ```
 
 2. В файле `Startup.cs` добавляем использование пространства имен `Microsoft.AspNet.Routing`:
@@ -207,7 +205,7 @@ public RouterMiddleware(
     "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
     "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
 	"Microsoft.AspNet.Mvc": "6.0.0-beta5"
-  },
+},
 ```
 
 2. В файле `Startup.cs` добавляем использование пространства имен `Microsoft.AspNet.Builder`:
