@@ -204,7 +204,7 @@ public RouterMiddleware(
 "dependencies": {
     "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
     "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
-	"Microsoft.AspNet.Mvc": "6.0.0-beta5"
+    "Microsoft.AspNet.Mvc": "6.0.0-beta5"
 },
 ```
 
