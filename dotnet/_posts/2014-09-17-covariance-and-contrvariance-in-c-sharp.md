@@ -266,7 +266,7 @@ namespace ConsoleApplication
 
             fA = fC; // работает
             // fC = fA; // ошибка компиляции
-                Animal result = fA(); // вызывается метод MethodCat(), а возвращаемое значение с типом Cat приводится к Animal
+            Animal result = fA(); // вызывается метод MethodCat(), а возвращаемое значение с типом Cat приводится к Animal
         }
 
 
@@ -334,7 +334,7 @@ namespace ConsoleApplication
 
             fC = fA; // работает
             // fA = fC; //ошибка компиляции
-                fC(new Cat()); // вызывается метод MethodAnimal(), а Cat приводится к Animal
+            fC(new Cat()); // вызывается метод MethodAnimal(), а Cat приводится к Animal
         }
 
 
