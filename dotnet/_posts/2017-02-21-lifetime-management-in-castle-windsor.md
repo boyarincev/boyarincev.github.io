@@ -181,3 +181,5 @@ Release одного компонента приводит к release целог
 4. [Typed Factory](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility.md)
 
 5. [Castle Windsor и утечки памяти](http://tommarien.github.io/blog/2012/04/21/castle-windsor-avoid-memory-leaks-by-learning-the-underlying-mechanics)
+
+Статья написана, [используя](http://kozmic.net/2010/08/19/must-windsor-track-my-components/) [материалы](http://kozmic.net/2010/08/27/must-i-release-everything-when-using-windsor/) сайта [kozmic.net](http://kozmic.net/)
