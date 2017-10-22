@@ -5,7 +5,7 @@ tags: castle-windsor
 published: false
 ---
 
-В этой статье я хотел бы затронуть вопрос управления временем жизни объектов при использовании Castle Windsor. 
+В этой статье я хотел бы разобрать вопрос управления временем жизни объектов при использовании Castle Windsor. 
 
 Мы рассмотрим такие вопросы как: 
 
@@ -15,7 +15,7 @@ published: false
 
 - Когда нужно вызывать `_container.Release(someObjectInstance)`.
 
-- Как работают различные Lifestyle'ы и Lifecycle'ы контейнера.
+- Как работают различные Lifestyle'ы и Lifecycle'ы Castle Windsor.
 
 # Castle Windsor и жизненный цикл создаваемых им объектов
 
