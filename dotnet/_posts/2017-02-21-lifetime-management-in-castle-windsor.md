@@ -174,7 +174,7 @@ Windsor контейнер имеет метод `Release()`, используя
 
 ### Ссылки:
 
-[Типизированные фабрики](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility.md)
+1. [Типизированные фабрики](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility.md)
 
 ## Места где вы все-таки должны вызывать Release явно
 
