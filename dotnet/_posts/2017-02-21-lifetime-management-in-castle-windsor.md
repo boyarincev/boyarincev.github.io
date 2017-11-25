@@ -2,7 +2,7 @@
 layout: post
 title: Управление жизненным циклом объектов в Castle Windsor
 tags: castle-windsor
-published: false
+published: true
 ---
 
 В этой статье я хотел бы разобрать вопрос управления временем жизни объектов при использовании  Inversion of Control контейнера [Castle Windsor](http://www.castleproject.org/).
@@ -133,9 +133,9 @@ Windsor контейнер имеет метод `Release()`, используя
 
 Потому что release одного компонента приводит к release целого графа зависимых от него объектов. 
 
-Как я писал в предыдущем параграфае, Windsor самостоятельно определяет окончание жизни объектов используях их Lifesyle. Допустим, вы имеете Per-web-request ShoppingCard компонент в вашем приложении, который зависит от Transient PaymentCalculatorService и Singleton AuditWriter, когда веб-запрос завершится, Windsor будет релизить ShoppingCard со всеми его зависимостями. Так как AuditWriter - это Singleton, то это не будет иметь какого-либо влияния на него и он продолжит свое существование, но PaymentCalculatorService (также как и сам ShoppingCard) будут подготовлены к уничтожению, без какой-либо явной работы с вашей стороны.
+Как я писал в предыдущем параграфае, Windsor самостоятельно определяет окончание жизни объектов используя их Lifesyle. Допустим, вы имеете Per-web-request ShoppingCard компонент в вашем приложении, который зависит от Transient PaymentCalculatorService и Singleton AuditWriter, когда веб-запрос завершится, Windsor будет релизить ShoppingCard со всеми его зависимостями. Так как AuditWriter - это Singleton, то это не будет иметь какого-либо влияния на него и он продолжит свое существование, но PaymentCalculatorService (также как и сам ShoppingCard) будут подготовлены к уничтожению, без какой-либо явной работы с вашей стороны.
 
-Тоже самое происходит и при использовании [Типизированных фабрик](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility-interface-based.md) - когда фабрика релизится, все компоненты, что вы получили из нее, будут релизиться также. Однако вам необходимо быть осторожными - если вы получаете слишком много объектов из фабрики, а время жизни фабрика велико (например Singleton) вы можете закончить с тем, что слишком много компонентов будет находиться в памяти длительное время.
+Тоже самое происходит и при использовании [Типизированных фабрик](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility-interface-based.md) - когда фабрика релизится, все компоненты, что вы получили из нее, будут релизиться также. Однако вам необходимо быть осторожными - если вы получаете слишком много объектов из фабрики, а время жизни фабрики велико (например Singleton) вы можете закончить с тем, что слишком много компонентов будет находиться в памяти длительное время.
 
 Предположим, вы пишете веб-браузер и имеете фабрику вкладок, которая создает вкладки, для отображения их в браузере. Эта фабрика будет иметь Singleton Lifestyle в вашем приложении, но вкладки, которые она производит будут Transient - пользователь может открыть вкладку, затем закрыть ее, затем открыть еще несколько и снова их закрыть. Наверное, вы сталкивались с тем, как быстро заканчивается оперативная память, когда у вас много открытых вкладок в браузере, поэтому ждать пока контейнер будет полностью уничтожен, чтобы освободить память от давно закрытых вкладок будет неправильно.
 
@@ -174,7 +174,7 @@ Windsor контейнер имеет метод `Release()`, используя
 
 ### Ссылки:
 
-1. [Типизированные фабрики](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility.md)
+1. [Типизированные фабрики](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility.md) в Castle Windsor
 
 ## Места где вы все-таки должны вызывать Release явно
 
@@ -212,7 +212,7 @@ Windsor контейнер имеет метод `Release()`, используя
 # Ссылки:
 
 1. [Castle Windsor и утечки памяти](http://tommarien.github.io/blog/2012/04/21/castle-windsor-avoid-memory-leaks-by-learning-the-underlying-mechanics)
-2. [Инверсия зависимостей на практикеъ](http://sergeyteplyakov.blogspot.ru/2013/01/blog-post.html) - статья Сергея Теплякова о общих вопросов использования IOC-контейнеров
+2. [Инверсия зависимостей на практике](http://sergeyteplyakov.blogspot.ru/2013/01/blog-post.html) - статья Сергея Теплякова о общих вопросов использования Ioc-контейнеров
 3. [Документация Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/README.md)
 
 Статья написана, [используя](http://kozmic.net/2010/08/19/must-windsor-track-my-components/) [материалы](http://kozmic.net/2010/08/27/must-i-release-everything-when-using-windsor/) сайта [kozmic.net](http://kozmic.net/)
