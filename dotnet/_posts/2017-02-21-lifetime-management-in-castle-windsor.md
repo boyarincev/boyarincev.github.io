@@ -213,5 +213,6 @@ Windsor контейнер имеет метод `Release()`, используя
 
 1. [Castle Windsor и утечки памяти](http://tommarien.github.io/blog/2012/04/21/castle-windsor-avoid-memory-leaks-by-learning-the-underlying-mechanics)
 2. [Инверсия зависимостей на практикеъ](http://sergeyteplyakov.blogspot.ru/2013/01/blog-post.html) - статья Сергея Теплякова о общих вопросов использования IOC-контейнеров
+3. [Документация Castle Windsor](https://github.com/castleproject/Windsor/blob/master/docs/README.md)
 
 Статья написана, [используя](http://kozmic.net/2010/08/19/must-windsor-track-my-components/) [материалы](http://kozmic.net/2010/08/27/must-i-release-everything-when-using-windsor/) сайта [kozmic.net](http://kozmic.net/)
