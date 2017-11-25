@@ -49,12 +49,4 @@ permalink: /about/
     
 [Мой профиль на LinkedIn](https://ru.linkedin.com/in/boyarincev)
     
-[Моё резюме на hh.ru](http://kirov.hh.ru/resume/0c588636ff012cf6110039ed1f654c36427552)
-    
-[Я на habrahabr.ru](http://habrahabr.ru/users/masterl)
-    
-[Я на stackoverflow.com](http://stackoverflow.com/users/5402731/boyarincev)
-    
-[Я на GitHub](https://github.com/boyarincev)
-    
 По всем вопросам вы также можете писать мне на boyarincev ... gmail т.ч к com
