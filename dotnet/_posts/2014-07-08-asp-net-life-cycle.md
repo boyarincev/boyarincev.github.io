@@ -2,6 +2,7 @@
 layout: post
 title: Жизненный цикл ASP.NET приложения
 tags: ASP-NET
+permalink: /:year/:month/:title/
 ---
 
 **Информация в посте не актуальна для ASP.NET 5**

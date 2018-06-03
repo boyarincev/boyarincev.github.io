@@ -3,6 +3,7 @@ layout: post
 title: Управление жизненным циклом объектов в Castle Windsor
 tags: castle-windsor
 published: true
+permalink: /:year/:month/:title/
 ---
 
 В этой статье я хотел бы разобрать вопрос управления временем жизни объектов при использовании  Inversion of Control контейнера [Castle Windsor](http://www.castleproject.org/).

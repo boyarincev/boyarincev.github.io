@@ -1,0 +1,25 @@
+<div class="all-tags">
+        <ul class="tags">
+        {% assign sorted_tags = site.tags | sort %}
+        {% for tag in sorted_tags %}
+          {% assign t = tag | first %}
+          {% if page.section %}
+            {% assign posts = tag | last | where_exp: "post", "post.categories contains page.section" %}
+          {% else %}
+            {% assign posts = tag | last %}
+          {% endif %}
+          {% if posts.size > 0 %}
+            <li>
+              <i class="icon-tag"></i>
+              {% if page.tags_page_url %}
+                <a href="{{ site.baseurl }}{{ page.tags_page_url }}#{{t | downcase | replace:" ","-" }}">
+                    {{t | downcase }} [{{ posts | size }}]
+                </a>
+              {% else %}
+                {{t | downcase }} [{{ posts | size }}]
+              {% endif %}
+            </li>
+          {% endif %}
+        {% endfor %}
+        </ul>  	    
+</div>

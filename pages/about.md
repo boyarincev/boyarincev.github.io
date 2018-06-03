@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: about
 title: Обо мне
-permalink: /about/
+permalink: about
+section: projects
 ---
 ![Бояринцев Станислав](/images/a_9ee26d41.jpg)
 

@@ -1,0 +1,15 @@
+---
+layout: page
+---
+
+{{ content }}
+
+<h2>Профессиональные новости</h2>
+
+{% include tags-short-list.html %}
+
+<div class="posts">
+  {% for post in site.categories[page.section] %}
+    {% include short-project.html %}
+  {% endfor %}
+</div>

@@ -1,0 +1,36 @@
+---
+layout: default
+---
+
+<article class="page-tags">
+    {% include tags-short-list.html %}
+  
+    <h1>{{ page.title }}</h1>
+
+    <div class="posts-by-tags">
+      {% assign sorted_tags = site.tags | sort %}
+      {% for tag in sorted_tags %}
+        {% assign t = tag | first %}
+        {% if page.section %}
+          {% assign posts = tag | last | where_exp: "post", "post.categories contains page.section" %}
+        {% else %}
+          {% assign posts = tag | last %}
+        {% endif %}        
+        {% if posts.size > 0 %}
+          <div id="{{t | downcase | replace:" ","-" }}">
+            {{ t | downcase }}
+            <ul>
+            {% for post in posts %}
+              {% if post.tags contains t %}
+              <li>
+                <a href="{{ post.url }}">{{ post.title }}</a>
+                <span class="date">{{ post.date | date: "%B %-d, %Y"  }}</span>
+              </li>
+              {% endif %}
+            {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </article>

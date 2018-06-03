@@ -1,0 +1,15 @@
+---
+layout: default
+---
+
+<h1>{{ page.title }}</h1>
+
+{{ content }}
+
+{% include tags-short-list.html %}
+
+<div class="posts">
+    {% for post in site.categories[page.section] %}
+      {% include {{ page.short_post }} %}
+    {% endfor %}
+</div>

@@ -29,9 +29,9 @@
           </div>
 
           <nav>
-            <a href="{{ site.baseurl }}/">Blog</a>
-            <a href="{{ site.baseurl }}/about">About</a>
-            <a href="{{ site.baseurl }}/tags">Tags</a>
+              {% for menu in site.main_menu %}
+                <a href="{{ site.baseurl }}/{{ menu.url }}">{{ menu.name }}</a>
+              {% endfor %}
           </nav>
         </header>
       </div>
