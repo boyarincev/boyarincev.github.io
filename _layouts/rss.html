@@ -18,8 +18,8 @@ layout: null
 				<title>{{ post.title | xml_escape }}</title>
 				<description>{{ post.excerpt | xml_escape }}</description>
 				<pubDate>{{ post.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
-				{% if page.uselinks == false %}
-					<link></link>
+				{% if page.linkonpost == false %}
+					<link>{{ post.link }}</link>
 				{% else %}
 					<link>{{ site.url }}{{ site.baseurl }}{{ post.url }}</link>
 				{% endif %}
