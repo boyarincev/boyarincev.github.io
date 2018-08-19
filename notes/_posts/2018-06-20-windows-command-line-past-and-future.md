@@ -1,5 +1,5 @@
 ---
-title: Экскурс в командную строку Windows
+title: Прошлое и будущее командной строки Windows
 tags: win-command-line
 link: "https://blogs.msdn.microsoft.com/commandline/2018/06/20/windows-command-line-backgrounder/"
 ---
