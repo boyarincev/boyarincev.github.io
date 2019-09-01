@@ -3,8 +3,6 @@ title: Про производительность Entity Framework
 tags: entityframework
 ---
 
-## Поговорим про производительность Entity Framework.
-
 Во-первых существует whitepaper по производительности EF, из которого можно узнать очень много грязных низкоуровневых подробностей работы EF, но он не обновлялся для EF Core, поэтому в чём-то не актуален. Хотя концептуально всё-равно полезен, если у вас возникнет необходимость супер-оптимизировать и скорость работы EF Core тоже: 
 
 [Performance considerations for EF 4, 5, and 6](https://docs.microsoft.com/en-us/ef/ef6/fundamentals/performance/perf-whitepaper) 
