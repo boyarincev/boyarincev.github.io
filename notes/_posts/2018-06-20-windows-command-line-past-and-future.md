@@ -1,6 +1,6 @@
 ---
 title: Прошлое и будущее командной строки Windows
-tags: win-command-line
+tags: wincommandline
 link: "https://blogs.msdn.microsoft.com/commandline/2018/06/20/windows-command-line-backgrounder/"
 ---
 
