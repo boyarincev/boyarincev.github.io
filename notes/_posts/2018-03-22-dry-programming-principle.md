@@ -3,7 +3,7 @@ title: Хорошая статья про DRY
 tags: programmingprinciples
 ---
 
-https://habrahabr.ru/company/mailru/blog/349978/
+[Сама статья](https://habrahabr.ru/company/mailru/blog/349978/)
 
 Оказалось, что принцип DRY был впервые описан в книге "Программист Прагматик", которую я обязательно прочитаю в будущем.
 
