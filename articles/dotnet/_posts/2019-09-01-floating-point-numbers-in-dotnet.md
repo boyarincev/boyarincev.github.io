@@ -5,7 +5,7 @@ tags: floating-point-numbers
 published: false
 ---
 
-Это не полноценная статья, я не буду подробно рассказывать о устройстве чисел с плавающей точкой, а порекомендую ссылки на другие статьи, рассказывающие об этом.
+Это не полноценная статья, я не буду подробно рассказывать о устройстве чисел с плавающей точкой, для этого я порекомендую ссылки на другие статьи рассказывающие об этом:
 
 У Джона Скита есть две коротенькие статьи на эту тему, первая [Binary floating point and .NET](https://csharpindepth.com/Articles/FloatingPoint) про double и float, вторая [Decimal floating point in .NET](https://csharpindepth.com/Articles/Decimal) про decimal, можно сначала прочитать их.
 
