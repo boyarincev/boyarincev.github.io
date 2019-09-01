@@ -1,4 +1,4 @@
-
+---
 title: Статья про джойны
 tags: databases
 ---
