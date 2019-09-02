@@ -3,6 +3,8 @@ title: Несколько интересных статей про Entity Framew
 tags: entityframework
 ---
 
+Не помню уже, как велики были возможности логирования в классическом Entity Framework, но у Entity Framework Core с этим точно всё в порядке, статья на эту тему: [Настройка логирования в Entity Frmework Core](https://msdn.microsoft.com/magazine/mt830355)
+
 Оказывается Entity Framework Core [может использовать INotifyPropertyChanged интерфейс](https://blog.oneunicorn.com/2016/11/16/notification-entities-in-ef-core-1-1/) для того, чтобы напрямую узнавать о изменениях в моделях и не использовать снапшот данных для их поиска. Думаю, что это можно попробовать использовать в высокопроизводительных сценариях.
 
 [Статья](https://benjii.me/2018/01/expression-projection-magic-entity-framework-core/) с разбором продвинутых техник использования проекций в Entity Framework Core.
