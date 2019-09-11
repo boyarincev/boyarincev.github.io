@@ -36,7 +36,13 @@ Double занимает 64 бита в памяти, поэтому метод `
 
 ```csharp
 //1.0d представленное в двоичном виде: 00000000000000000000000000000000000000000000000011110000111111
-Console.WriteLine($"1.0d представленное в двоичном виде: {string.Join("", bytesArray.Select(ba => ba == 0 ? "00000000" : Convert.ToString(ba, 2)))}"); 
+Console.WriteLine($"1.0d представленное в двоичном виде: {string.Join("", bytesArray.Select(ba => ba == 0 ? "00000000" : Convert.ToString(ba, 2)))}");
+
+var bytesArray = BitConverter.GetBytes(1.0d).Reverse();
+Console.WriteLine($"{string.Join("", bytesArray.Select(ba => Convert.ToString(ba, 2).PadLeft(8, '0')))}"); 
+var oneinlong = BitConverter.DoubleToInt64Bits(1.0d);
+var onebinary = Convert.ToString(oneinlong, 2).PadLeft(64, '0');
+Console.WriteLine(onebinary);
 ```
 
 А можно воспользоваться методом `DoubleToInt64Bits` - он возвращает 64 битное целое число, которое в двоичном виде соответствует байтовому представлению числа типа double:
