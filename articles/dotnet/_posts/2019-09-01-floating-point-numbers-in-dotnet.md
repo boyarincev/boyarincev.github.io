@@ -16,44 +16,44 @@ published: false
 ## Кратко о том как Double хранится в памяти 
 
 
+
 ## Как можно получить байтовое представление Double
 [Класс BitConverter](https://docs.microsoft.com/ru-ru/dotnet/api/system.bitconverter?view=netframework-4.8) позволяет получить байтовое представление базовых типов или наоборот преобразовать байтовое представление в базовый тип.
 
 ```csharp
 var bytesArray = BitConverter.GetBytes(1.0d); //Получить представление 1 типа double в виде массива байт
 
-// 1.0d представленное как массив байт: 0; 0; 0; 0; 0; 0; 240; 63
-Console.WriteLine($"1.0d представленное как массив байт: {string.Join("; ", bytesArray)}"); 
+// 1.0d представленное как массив байтов: 0-0-0-0-0-0-240-63
+Console.WriteLine($"1.0d представленное как массив байтов: {string.Join("-", bytesArray)}"); 
 
-//1.0d представленное как массив байт в виде 16-ричных чисел: 00-00-00-00-00-00-F0-3F
-Console.WriteLine($"1.0d представленное как массив байт в виде 16-ричных чисел: {BitConverter.ToString(bytesArray)}"); 
-
+//1.0d представленное как массив байтов в виде 16-ричных чисел: 00-00-00-00-00-00-F0-3F
+Console.WriteLine($"1.0d представленное как массив байтов в виде 16-ричных чисел: {BitConverter.ToString(bytesArray)}"); 
 ```
 
-Double занимает 64 бита в памяти, поэтому метод `GetBytes` возвращает нам массив из 8 байт (каждый байт занимает 8 бит).
+Double занимает 8 байтов в памяти и метод `GetBytes` возвращает нам массив из элементов.
 
-Но для разбора удобнее всего будет числа представлять в двоичном виде. Можно для этого каждый элемент массива представить в двоичном виде:
+Но для разбора удобнее будет числа представлять в двоичном системе исчисления. Можно для этого каждый элемент массива представить в двоичном виде:
 
 ```csharp
-//1.0d представленное в двоичном виде: 00000000000000000000000000000000000000000000000011110000111111
-Console.WriteLine($"1.0d представленное в двоичном виде: {string.Join("", bytesArray.Select(ba => ba == 0 ? "00000000" : Convert.ToString(ba, 2)))}");
-
+//Reverse для того, чтобы изменить обратный порядок байтов, который используется процессором, на прямой
 var bytesArray = BitConverter.GetBytes(1.0d).Reverse();
-Console.WriteLine($"{string.Join("", bytesArray.Select(ba => Convert.ToString(ba, 2).PadLeft(8, '0')))}"); 
-var oneinlong = BitConverter.DoubleToInt64Bits(1.0d);
-var onebinary = Convert.ToString(oneinlong, 2).PadLeft(64, '0');
-Console.WriteLine(onebinary);
+//Convert.ToString не возвращает старшие разряды байта, равные 0, поэтому используем PadLeft
+Console.WriteLine($"1.0d в двоичной системе исчисления: {string.Join("", bytesArray.Select(ba => Convert.ToString(ba, 2).PadLeft(8, '0')))}"); 
+//1.0d в двоичной системе исчисления: 0011111111110000000000000000000000000000000000000000000000000000
 ```
 
 А можно воспользоваться методом `DoubleToInt64Bits` - он возвращает 64 битное целое число, которое в двоичном виде соответствует байтовому представлению числа типа double:
 
 ```csharp
 var oneinlong = BitConverter.DoubleToInt64Bits(1.0d);
-var onvebinary = Convert.ToString(oneint64bits, 2);
+//Convert.ToString не возвращает старшие разряды 64 разрядного целого числа, равные 0, поэтому используем PadLeft
+var onebinary = Convert.ToString(oneinlong, 2).PadLeft(64, '0');
+Console.WriteLine($"1.0d в двоичной системе исчисления: {onebinary}");
+//1.0d в двоичной системе исчисления: 0011111111110000000000000000000000000000000000000000000000000000
 ```
-
-Можно использовать статический метод `GetBits` типа Double
+Также будет удобнее сразу разделить число на его основные составляющие: Мантиссу, экспоненту и знак. Знак хранится в старшем бите, следующие 11 старших бит занимает экспонента, оставшиеся 52 бита мантисса.
 
 ```csharp
-
+Console.WriteLine("sign   " + "exponent      " + "mantissa   ");
+Console.WriteLine(onebinary[0].ToString().PadRight(7) + string.Concat(onebinary.Skip(1).Take(11)).PadRight(14) + string.Concat(onebinary.Skip(12).Take(52)));
 ```
