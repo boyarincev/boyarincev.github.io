@@ -56,4 +56,6 @@ Console.WriteLine($"1.0d в двоичной системе исчисления
 ```csharp
 Console.WriteLine("sign   " + "exponent      " + "mantissa   ");
 Console.WriteLine(onebinary[0].ToString().PadRight(7) + string.Concat(onebinary.Skip(1).Take(11)).PadRight(14) + string.Concat(onebinary.Skip(12).Take(52)));
+//sign   exponent      mantissa   
+//0      01111111111   0000000000000000000000000000000000000000000000000000
 ```
