@@ -5,7 +5,7 @@ tags: floating-point-numbers
 published: false
 ---
 
-Это не полноценная статья, я не буду подробно рассказывать о устройстве чисел с плавающей точкой, а порекомендую ссылки на другие статьи рассказывающие об этом:
+Это не полноценная статья, я не смогу подробно и доступно рассказать о устройстве чисел с плавающей точкой, а порекомендую ссылки на другие статьи рассказывающие об этом:
 
 У Джона Скита есть две коротенькие статьи на эту тему, первая [Binary floating point and .NET](https://csharpindepth.com/Articles/FloatingPoint) про double и float, вторая [Decimal floating point in .NET](https://csharpindepth.com/Articles/Decimal) про decimal, можно сначала прочитать их.
 
@@ -14,8 +14,10 @@ published: false
 В этой статье я только разберу, конкретные байтовые представления чисел в памяти, подробно остановившись на том, как они получаются. Мне кажется, таких конкретных примеров не хватает в статьях выше для лучшего понимания.
 
 ## Кратко о том как Double хранится в памяти 
+Double занимает в памяти 8 байт или 64 разряда в двоичном представлении. Старший разряд хранит знак числа - 0 это "+", 1 это "-". 11 следующих разрядов занимает экспонента. Оставшиеся 52 - мантисса. Грубо говоря, комбинация этих трёх компонент в виде: `знак * мантисса * 2 ^ экспонента`, представляет хранимое число. Есть разные классы хранимых чисел: нормализованные, субнормальные, бесконечность и Nan - они отличаются тем, как именно из хранимых компонент получается итоговое число. Большинство чисел нормализованные - по факту это значит, что мантисса и экспонента у них подобраны таким образом, что если взять мантиссу добавить ей в старший разряд 1, получившееся число разделить на 2 ^ 52 и умножить на 2 ^ (экспонента - 1023), то мы получим искомое число.
 
-
+1. Объяснить зачем делить на 2 ^52
+2. Объяснить зачем вычитать 1023
 
 ## Как можно получить байтовое представление Double
 [Класс BitConverter](https://docs.microsoft.com/ru-ru/dotnet/api/system.bitconverter?view=netframework-4.8) позволяет получить байтовое представление базовых типов или наоборот преобразовать байтовое представление в базовый тип.
@@ -45,27 +47,43 @@ Console.WriteLine($"1.0d в двоичной системе исчисления
 А можно воспользоваться методом `DoubleToInt64Bits` - он возвращает 64 битное целое число, которое в двоичном виде соответствует байтовому представлению числа типа double.
 
 ```csharp
-var oneinlong = BitConverter.DoubleToInt64Bits(1.0d);
+var numberinlong = BitConverter.DoubleToInt64Bits(1.0d);
 //Convert.ToString не возвращает старшие разряды 64 разрядного целого числа, равные 0, поэтому используем PadLeft
-var onebinary = Convert.ToString(oneinlong, 2).PadLeft(64, '0');
-Console.WriteLine($"1.0d в двоичной системе исчисления: {onebinary}");
+var numberbinary = Convert.ToString(numberinlong, 2).PadLeft(64, '0');
+Console.WriteLine($"1.0d в двоичной системе исчисления: {numberbinary}");
 //1.0d в двоичной системе исчисления: 0011111111110000000000000000000000000000000000000000000000000000
 ```
 
 ## Разберём некоторые нормализованные числа
 
-_Определение нормализованного числа_
-
-Для разобра удобнее сразу разделить число на его основные составляющие: фракцию, экспоненту и знак. Знак хранится в старшем бите, следующие 11 старших бит занимает экспонента, оставшиеся 52 бита фракция.
+Для разобра удобнее сразу разделить число на его основные составляющие: фракцию, экспоненту и знак. Знак хранится в старшем бите, следующие 11 старших бит занимает экспонента, оставшиеся 52 бита фракция ().
 
 ```csharp
-Console.WriteLine("sign   " + "exponent      " + "fraction   ");
-Console.WriteLine(onebinary[0].ToString().PadRight(7) + string.Concat(onebinary.Skip(1).Take(11)).PadRight(14) + string.Concat(onebinary.Skip(12).Take(52)));
-//sign   exponent      fraction   
-//0      01111111111   0000000000000000000000000000000000000000000000000000
+var sign = numberbinary[0];
+var storedexponent = string.Concat(numberbinary.Skip(1).Take(11));
+var storedmantissa = string.Concat(numberbinary.Skip(12).Take(52));
+Console.WriteLine("sign   " + "stored exponent   " + "stored mantissa");
+Console.WriteLine(sign.ToString().PadRight(7) + storedexponent.PadRight(18) + storedmantissa);
+//sign   stored exponent   stored mantissa
+//0      01111111111       0000000000000000000000000000000000000000000000000000
+
+var storedexponentinint = Convert.ToInt64(storedexponent, 2);
+var realexponentinint = storedexponentinint - 1023;
+var realmantissa = $"1{storedmantissa}";
+var realmantissainint = Convert.ToInt64(realmantissa, 2);
+
+var resultnumber = realmantissainint / Math.Pow(2,52) * Math.Pow(2, realexponentinint);
+
+Console.WriteLine($"{nameof(storedexponentinint)} = {storedexponentinint}");
+Console.WriteLine($"{nameof(realexponentinint)} = {nameof(storedexponent)} - 1023 = {realexponentinint}");
+Console.WriteLine($"{nameof(realmantissa)}: {realmantissa}");
+Console.WriteLine($"{nameof(realmantissainint)}: {realmantissainint}");
+Console.WriteLine($"{nameof(resultnumber)} = {nameof(realmantissainint)} / 2^52 * 2^{nameof(realexponentinint)} = {realmantissainint} / 4503599627370496 * {Math.Pow(2, realexponentinint)} = {resultnumber}");
 ```
 
+
+
 Берём мантиссу прибавляем неявную единицу впереди получается: 10100000000000000000000000000000000000000000000000000
-Это число умножаем на 2^52 (N-1) - получаем 1.25
+Это число делим на 2^52 (N-1) - получаем 1.25
 Экспонента 1025 со смещением 1023 получается, что актуальная экспонента 2
 1.25 * 4 = 5
