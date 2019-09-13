@@ -1,17 +1,18 @@
 
 div.highlight {
-  background-color: #efefef;
+  font-size: 0.85em;
+  background-color: transparent;
   padding: 7px 7px 7px 10px;
   border: 1px solid #ddd;
   -moz-box-shadow: 3px 3px rgba(0,0,0,0.1);
   -webkit-box-shadow: 3px 3px rgba(0,0,0,0.1);
   box-shadow: 3px 3px rgba(0,0,0,0.1);
   margin: 20px 0 20px 0;
-  overflow: scroll;
+  overflow: auto;
 }
 
 code {
-  font-family:'Bitstream Vera Sans Mono','Courier', monospace;
+  font-family:Consolas,Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace
 }
 
 .highlight .c { color: #586E75 } /* Comment */
