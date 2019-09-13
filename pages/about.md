@@ -12,6 +12,6 @@ section: projects
     
 [Мой профиль на LinkedIn](https://ru.linkedin.com/in/boyarincev)
 
-Мой [Телеграм-канал](tg://resolve?domain=dotnetwebdev) о веб-разработке на дотнете
+[Мой телеграм-канал](tg://resolve?domain=dotnetwebdev) о веб-разработке на дотнете
 
 По всем вопросам вы также можете писать мне на [почту](mailto:boyarincev@gmail.com).
