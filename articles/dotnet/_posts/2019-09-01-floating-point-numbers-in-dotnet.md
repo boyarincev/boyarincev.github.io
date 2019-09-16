@@ -2,7 +2,7 @@
 layout: post
 title: Представление чисел с плавающей точкой в памяти в дотнете
 tags: floating-point-numbers
-published: true
+published: false
 ---
 
 * A markdown unordered list which will be replaced with the ToC, excluding the "Contents header" from above
