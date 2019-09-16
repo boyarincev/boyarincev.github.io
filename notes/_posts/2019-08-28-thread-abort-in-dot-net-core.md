@@ -1,10 +1,10 @@
 ---
-title: Прерывание выполнения потока в dot.net core
+title: Прерывание выполнения потока в .NET Core
 tags: dotnetcore
 published: true
 ---
 
-В dot.net core выпилили метод `Thread.Abort()` и это значит, что теперь невозможно насильственное прерывание выполнения потока из вне этого потока средствами управляемого кода.
+В .NET Core выпилили метод `Thread.Abort()` и это значит, что теперь невозможно насильственное прерывание выполнения потока из вне этого потока средствами управляемого кода.
 
 Так что все эти знания о нюансах использования `Thread.Abort()` и чудесных способностях выбираться из try/catch блоков исключения `ThreadAbortException`, которые мы заучивали в Рихтере, теперь бесполезны - сегодня выкидывание ThreadAbortException невозможно.
 
@@ -29,4 +29,4 @@ published: true
 
 > I am not even talking about larger .NET ecosystem - if you take a random NuGet package from nuget.org, it is almost guaranteed that it has reliability bugs in the presence of thread abort.
 
-Да и Джон Скит, Эрик Липперт и Джо Даффи, задолго до dot.net core тоже [не рекомендовали использовать](https://stackoverflow.com/a/1856312/5402731) `Thread.Abort()`
+Да и Джон Скит, Эрик Липперт и Джо Даффи, задолго до .NET Core тоже [не рекомендовали использовать](https://stackoverflow.com/a/1856312/5402731) `Thread.Abort()`
