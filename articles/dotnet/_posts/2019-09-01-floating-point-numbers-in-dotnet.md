@@ -5,8 +5,11 @@ tags: floating-point-numbers
 published: true
 ---
 
+## В этой статье:
 * A markdown unordered list which will be replaced with the ToC, excluding the "Contents header" from above
 {:toc}
+
+## Вступление
 
 Это не самостоятельная статья, я не смогу подробно, компетентно и доступно рассказать о устройстве чисел с плавающей точкой, а порекомендую ссылки на другие статьи рассказывающие об этом (хотя и их тоже не назовёшь идеальными):
 
@@ -110,8 +113,6 @@ Console.WriteLine(sign.ToString().PadRight(7) + storedexponent.PadRight(18) + st
 ## Разберём некоторые нормализованные числа
 
 Я написал сниппет, с помощью которого можно посмотреть разбор любого нормализованного числа:
-
-{% gist c6e6f2f0b3aa672702d3f274ccbcebc6 %}
 
 ```csharp
 var numberinlong = BitConverter.DoubleToInt64Bits(1.0d);
