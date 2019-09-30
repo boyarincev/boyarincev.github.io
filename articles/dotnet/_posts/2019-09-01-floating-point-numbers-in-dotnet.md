@@ -2,7 +2,7 @@
 layout: post
 title: Представление чисел с плавающей точкой в памяти в дотнете
 tags: floating-point-numbers
-published: false
+published: true
 ---
 
 * A markdown unordered list which will be replaced with the ToC, excluding the "Contents header" from above
@@ -111,7 +111,7 @@ Console.WriteLine(sign.ToString().PadRight(7) + storedexponent.PadRight(18) + st
 
 Я написал сниппет, с помощью которого можно посмотреть разбор любого нормализованного числа:
 
-<script src="https://gist.github.com/boyarincev/c6e6f2f0b3aa672702d3f274ccbcebc6.js"></script>
+{% gist c6e6f2f0b3aa672702d3f274ccbcebc6 %}
 
 ```csharp
 var numberinlong = BitConverter.DoubleToInt64Bits(1.0d);
