@@ -9,7 +9,7 @@ published: true
 
 В этой статье я разбираю, как Double хранится в памяти, но это не самостоятельная статья, в том плане, что вряд ли вы сможете разобраться с этой темой, прочитав одну её, поэтому я порекомендую ссылки на другие статьи (хотя и их тоже не назовёшь идеальными).
 
-У Джона Скита есть две коротенькие статьи на эту тему, первая: [Binary floating point and .NET](https://csharpindepth.com/Articles/FloatingPoint) - про double и float, вторая: [Decimal floating point in .NET](https://csharpindepth.com/Articles/Decimal) - про decimal (в этой статье я не касаюсь Decimal), можно начать с них.
+У Джона Скита есть две коротенькие статьи на эту тему, первая: [Binary floating point and .NET](https://csharpindepth.com/Articles/FloatingPoint) - про double и float, вторая: [Decimal floating point in .NET](https://csharpindepth.com/Articles/Decimal) - про decimal (в этой статье я не касаюсь Decimal).
 
 Сам Скит рекомендует к прочтению эту статью: [Floating Point in .NET part 1: Concepts and Formats](https://www.extremeoptimization.com/resources/Articles/FPDotNetConceptsAndFormats.aspx) - она  более подробная и позволит более основательно разобраться в вопросе.
 
