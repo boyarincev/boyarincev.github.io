@@ -5,10 +5,6 @@ tags: floating-point-numbers
 published: true
 ---
 
-## В этой статье:
-* A markdown unordered list which will be replaced with the ToC, excluding the "Contents header" from above
-{:toc}
-
 ## Вступление
 
 Это не самостоятельная статья, я не смогу подробно, компетентно и доступно рассказать о устройстве чисел с плавающей точкой, а порекомендую ссылки на другие статьи рассказывающие об этом (хотя и их тоже не назовёшь идеальными):
