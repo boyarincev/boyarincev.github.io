@@ -1,0 +1,22 @@
+---
+title: Суть принципа Open-Closed
+tags: SOLID
+published: false
+---
+
+Вообще есть такое чувство, что в 2к19 SOLID-принципы уже как-то совсем устарели, никто вокруг про них не говорит и не пишет, но если вдруг вспомнить о них, то Open-Closed в них самый неоднозначный.
+
+Если посмотреть на формальное определение: "Модули должны быть открытыми для расширения, но закрытыми для модификации" - то с первой частью всё более менее понятно, 
+продумываем дизайн модуля, так чтобы его поведение было расширяемо, все в общем-то, объясняя этот принцип и сосредотачиваются, на этой первой части, но что значит вторая часть?
+
+"Модули должны быть закрытыми для модификации" - Чего мы достигаем закрывая модули от модификации, какую цель преследует этот запрет? Мы теперь совсем не должны вносить изменения прямо в модули?
+
+Для объяснений [слово предоставляется Роберту Мартину](https://blog.cleancoder.com/uncle-bob/2013/03/08/AnOpenAndClosedCase.html), который и популяризировал этот принцип:
+
+> It should be easy to change the behavior of a module without changing the source code of that module. 
+> This doesn’t mean you will never change the source code, this doesn’t mean you can stop using your version control systems (sheesh!). 
+> What it means is that you should strive to get your code into a position such that, when behavior changes in expected ways, 
+> you don’t have to make sweeping changes to all the modules of the system. 
+> Ideally, you will be able to add the new behavior by adding new code, and changing little or no old code.
+
+То есть дизайн модулей должен позволять изменить их поведение не изменяя их исходный код - у вас, например, может не быть доступа к этому исходному коду.
