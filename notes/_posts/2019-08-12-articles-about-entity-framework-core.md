@@ -12,6 +12,8 @@ tags: entityframework
 2. Как хранить и использовать вложенные проекции для проекций.
 3. И наконец самое интересное - способ создания вложенных проекций не для коллекций, а для одиночных сущностей (для вложенной проекции одиночной сущности нельзя вызвать Select, а значит и нельзя сделать проекцию.
 
+[EF Core 1.1: Read Only Entities & Extending Metadata with Annotations](https://romiller.com/2017/02/14/ef-core-1-1-read-only-entities-extending-metadata-with-annotations/) - статья показывающая пример работы с аннотациями метаданных сущностей в EF Core.
+
 Ну и наконец две статьи в которых рассказывается, как можно изменить генерацию SQL в Entity Framework Core.
 
 1. [Extending SQL Generation in Entity Framework Core](https://www.chasingdevops.com/sql-generation-ef-core/)
