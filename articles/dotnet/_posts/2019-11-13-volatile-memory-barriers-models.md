@@ -106,9 +106,7 @@ interaction of multiple CPUs and/or devices.
 
 Использование ключевого слова `volatile` или методов `Volatile.Read/Write` - это один из способов установить барьер памяти, `Thread.MemoryBarier` - другой.
 
-Статья на эту тему:
-
-[Memory Barriers in .NET](https://afana.me/archive/2015/07/10/memory-barriers-in-dot-net.aspx) Nadeem Afana.
+Статья на эту тему [Memory Barriers in .NET](https://afana.me/archive/2015/07/10/memory-barriers-in-dot-net.aspx) Nadeem Afana.
 
 Статья интересна тем, что рассматривает вопрос работы барьеров памяти довольно близко к тому как они работают на уровне процессоров.
 
