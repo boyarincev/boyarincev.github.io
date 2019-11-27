@@ -115,9 +115,7 @@ interaction of multiple CPUs and/or devices.
 - Автор тоже упоминает, что существует модель памяти .NET в которой запрещены перестановки запись-запись.
 - Автор упоминает, что для lock, Interlocked и прочих вещей генерируется полный барьер памяти - ECMA-335 говорит нам другое в разделе I.12.6.5 Locks and threads.
 
-Если статья вас заинтересовала, но некоторые слова вы не поняли, например, такие STORE Buffer и Cache Coherence, и есть желание разобраться дальше, то читайте статью [Memory Barriers: a Hardware View for Software Hackers](http://www.rdrop.com/users/paulmck/scalability/paper/whymb.2010.07.23a.pdf) Paul E. McKenney (или [русский перевод первой части статьи](https://habr.com/ru/post/196548/))
-
-Тут всё прямо с алгоритмами того, как процесс происходит внутри процессора.
+Если статья вас заинтересовала, но некоторые слова вы не поняли, например, такие STORE Buffer и Cache Coherence, и есть желание разобраться дальше, то читайте статью [Memory Barriers: a Hardware View for Software Hackers](http://www.rdrop.com/users/paulmck/scalability/paper/whymb.2010.07.23a.pdf) Paul E. McKenney (или [русский перевод первой части статьи](https://habr.com/ru/post/196548/)) - тут всё прямо с алгоритмами того, как процесс происходит внутри процессора.
 
 #### Дополнительный материал по барьерам памяти
 
