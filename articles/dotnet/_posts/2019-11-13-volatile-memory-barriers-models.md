@@ -119,7 +119,7 @@ interaction of multiple CPUs and/or devices.
 
 Тут всё прямо с алгоритмами того, как процесс происходит внутри процессора.
 
-Дополнительный материал по барьерам памяти:
+#### Дополнительный материал по барьерам памяти
 
 [LINUX KERNEL MEMORY BARRIERS](https://www.kernel.org/doc/Documentation/memory-barriers.txt) David Howells, Paul E. McKenney
 
