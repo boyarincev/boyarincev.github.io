@@ -1,17 +1,30 @@
 ---	
-title: Что такое инкапсуляция?
+title: Инкапсуляция - это не про сокрытие деталей реализации
 tags: oop
 published: false	
 ---	
 
-Инкапсуляция - один из проблемных терминов программирования, а всё потому что у него нет прослеживаемого происхождения и разные авторы дают ему свою отличающуюся авторскую трактовку.
+Вроде живёшь себе спокойно, думаешь, что понимаешь кое-что в программировании, но вдруг во время дружеской беседы с друзьями программистами говоришь:
 
-Вот, например, возьмём определение из Википедии [Encapsulation (computer programming)]()https://en.wikipedia.org/wiki/Encapsulation_(computer_programming):
+> Инкапсуляция? - Ну это сокрытие деталей реализации.
 
+А тебе в ответ:
 
-> In object-oriented programming (OOP), encapsulation refers to the bundling of data with the methods that operate on that data, or the restricting of direct access to some of an object's components.[[1](https://www.javaworld.com/article/2075271/encapsulation-is-not-information-hiding.html)] Encapsulation is used to hide the values or state of a structured data object inside a class, preventing unauthorized parties' direct access to them. Publicly accessible methods are generally provided in the class (so-called "getters" and "setters") to access the values, and other client classes call these methods to retrieve and modify the values within the object.
+> Вообще-то инкапсуляция - это объединение данных и методов оперирующих этими данными вместе, а сокрытие тут совсем не обязательно.
 
->In object-oriented programming languages, and other related fields, encapsulation refers to one of two related but distinct notions, and sometimes to the combination thereof:[3][4]
+Начинаем разбираться, идём в [Википедию](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming), а она говорит:
 
->A language mechanism for restricting direct access to some of the object's components.[5][6]
->A language construct that facilitates the bundling of data with the methods (or other functions) operating on that data.[1][7]
+> Ну под инкапсуляцией понимают либо объединение вместе данных и методов, либо скрытие внутренних данных и состояния объекта и ограничение прямого доступа к ним, либо комбинацию этих определений. В общем - по разному её понимают.
+
+И в качестве примера рассматривающего инкапсуляции исключительно как механизма для объединения данных и методов вместе даётся ссылка на статью [Encapsulation is not information hiding](https://www.javaworld.com/article/2075271/encapsulation-is-not-information-hiding.html) - а [Information Hiding](https://en.wikipedia.org/wiki/Information_hiding) - это по сути и есть сокрытие деталей реализации, так что явный аргумент пока не в мою пользу.
+
+Но я то всегда воспринимал инкапсуляцию исключительно в контексте сокрытия деталей реализации, а у статьи никаких рефференсов на материалы, которые она использовала нет, так что предлагаю посмотреть ещё источники.
+
+Берём книгу "Чистая Архитектура" Роберта Мартина, смотрим что там:
+
+> Это возможность очертить круг связанных данных и функций. За пределами круга эти данные невидимы и доступны только некоторые функции.
+
+Берём книгу "Объектно ориентированный анализ и проектирование с примерами приложений" Гради Буч:
+
+> Абстракция и инкапсуляция дополняют друг друга. В центре внимания абстракции находится наблюдаемое поведение объекта, а инкапсуляция сосредоточена на реализации, обеспечивающей заданное поведение. Как правило, инкапсуляция осуществляется с помощью сокрытия информации (а не просто сокрытия данных), т.е. утаивания всех несущественных деталей объекта.
+
