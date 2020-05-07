@@ -51,3 +51,21 @@ published: false
 >(3.2 Five Rules, 53 стр.)
 
 Это он про то что не нужно термин "Information Hiding" понимать буквально как ограничение физического доступа к исходному коду, а только как языковые правила, помогающие ограничивать доступ одних модулей к свойствам других модулей.
+
+В общем все лидеры мнений согласны с моим определением инкапсуляции. 
+
+И тут мой оппонент находит этот документ: [Abstraction, Encapsulation, and Information Hiding](http://www.tonymarston.co.uk/php-mysql/abstraction.txt) By Edward V. Berard The Object Agency:
+
+> I recently read a magazine article that said, "Encapsulation is just a fancy name for information hiding." Since the writer was non-technical, I just assumed that he was attempting to show that he really did not understand technical matters.
+>
+>As a process, encapsulation means the act of enclosing one or more items within a (physical or logical) container. Encapsulation, as an entity, refers to a package or an enclosure that holds (contains, encloses) one or more items. It is extremely important to note that nothing is said about "the walls of the enclosure." Specifically, they may be "transparent," "translucent," or even "opaque."
+
+[Edward V. Berard](https://en.wikiquote.org/wiki/Edward_V._Berard) похоже более менее известная фигура, а статья выше судя по [scholar.google.com](https://scholar.google.com/scholar?hl=ru&as_sdt=0%2C5&as_ylo=1971&as_yhi=2000&q=Edward+V.+Berard+Abstraction%2C+encapsulation%2C+and+information+hiding&btnG=) была напечатана в книге [Essays on Object-Oriented Software Engineering](https://www.amazon.com/Essays-Object-Oriented-Software-Engineering-Edward/dp/0132888955) и датируется 1993 годом (пдф книги, правда, я найти не смог, чтобы точно в этом убедиться).
+
+Хороший аргумент в пользу точки зрения о том, что инкапсуляция - это только про объединение вместе данных и методов.
+
+Наконец решаем посмотреть, что обо всё этом думает stackoverflow. Сначала ничего интересного не находим, большинство определений так или иначе крутятся вокруг моей интерпретации:
+
+[Difference between abstraction and encapsulation?](https://stackoverflow.com/q/742341/5402731)
+[Encapsulation vs Abstraction?](https://stackoverflow.com/q/8960918/5402731)
+[encapsulation vs abstraction real world example](https://stackoverflow.com/q/12072980/5402731)
