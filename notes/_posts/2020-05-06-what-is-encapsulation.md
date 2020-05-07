@@ -67,5 +67,19 @@ published: false
 Наконец решаем посмотреть, что обо всё этом думает stackoverflow. Сначала ничего интересного не находим, большинство определений так или иначе крутятся вокруг моей интерпретации:
 
 [Difference between abstraction and encapsulation?](https://stackoverflow.com/q/742341/5402731)
+
 [Encapsulation vs Abstraction?](https://stackoverflow.com/q/8960918/5402731)
+
 [encapsulation vs abstraction real world example](https://stackoverflow.com/q/12072980/5402731)
+
+Но встречается и [другой взгляд на инкапсуляцию](https://stackoverflow.com/a/28614407/5402731):
+
+>Encapsulation is probably the most misunderstood concept of OOP.
+>
+>Encapsulation is NOT data hiding!
+>
+>This doesn't require data hiding at all. The advantage is that the code is more manageable, because you can clearly see all the related "things" (that is, data and functions) grouped together, so at a glance you know what you have (data) and what you can do with it (methods).
+
+А в качестве рефференсов к ответу уже известные нам статьи [Encapsulation is not information hiding](http://www.javaworld.com/article/2075271/core-java/encapsulation-is-not-information-hiding.html) и [Abstraction, Encapsulation, and Information Hiding](http://www.tonymarston.co.uk/php-mysql/abstraction.txt) 
+
+На этом уже собирались рассходиться, так и не найдя правды - истоки определения слова Инкапсуляция лежат где-то в глубине времён, никто не упоминает кто этот термин ввёл, чтобы прочитать в источнике, что автор вложил в него, а разные точки зрения на него существуют как минимум 30 лет. Но тут каким-то чудом я натыкаюсь вот на [этот ответ](https://stackoverflow.com/a/39499367/5402731)
