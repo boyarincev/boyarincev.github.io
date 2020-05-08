@@ -110,7 +110,8 @@ published: true
 
 >We will use the term procedural encapsulation to refer to the technique of representing system components in terms of one or more procedures such that interactions among compoments are limited to procedure calls
 >
->The term "procedural encapsulation" is derived from the fact that the procedures encapsulate or isolate the representational aspects of the data. 
+>The representation of the stream state and contents, although accessible, need not be manipulated directly by the programmer. When only the defined operations are used, a program is independent of the particular representation
+chosen for a stream. The term "procedural encapsulation" is derived from the fact that the procedures encapsulate or isolate the representational aspects of the data. 
 
 То есть с самого своего рождения в программировании термин инкапсуляция подразумевал сокрытие информации.
 
