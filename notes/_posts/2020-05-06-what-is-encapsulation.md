@@ -12,7 +12,7 @@ published: false
 
 > Вообще-то инкапсуляция - это объединение данных и методов оперирующих этими данными, а сокрытие тут совсем не обязательно.
 
-Начинаем разбираться, идём в [Википедию](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)), а она говорит:
+Начинаем разбираться, идём в [Википедию](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)), а она пишет:
 
 > Под инкапсуляцией понимают либо объединение вместе данных и методов, либо скрытие внутренних данных и состояния объекта и ограничение прямого доступа к ним, либо комбинацию этих определений. В общем разные авторы по разному её понимают.
 >
@@ -62,7 +62,7 @@ published: false
 >
 >As a process, encapsulation means the act of enclosing one or more items within a (physical or logical) container. Encapsulation, as an entity, refers to a package or an enclosure that holds (contains, encloses) one or more items. It is extremely important to note that nothing is said about "the walls of the enclosure." Specifically, they may be "transparent," "translucent," or even "opaque."
 
-[Edward V. Berard](https://en.wikiquote.org/wiki/Edward_V._Berard) похоже более менее известная фигура, а статья выше судя по [scholar.google.com](https://scholar.google.com/scholar?hl=ru&as_sdt=0%2C5&as_ylo=1971&as_yhi=2000&q=Edward+V.+Berard+Abstraction%2C+encapsulation%2C+and+information+hiding&btnG=) была напечатана в книге [Essays on Object-Oriented Software Engineering](https://www.amazon.com/Essays-Object-Oriented-Software-Engineering-Edward/dp/0132888955) и датируется 1993 годом (пдф книги, правда, я найти не смог, чтобы точно в этом убедиться).
+[Edward V. Berard](https://en.wikiquote.org/wiki/Edward_V._Berard) похоже более менее известная фигура, а статья судя по [scholar.google.com](https://scholar.google.com/scholar?hl=ru&as_sdt=0%2C5&as_ylo=1971&as_yhi=2000&q=Edward+V.+Berard+Abstraction%2C+encapsulation%2C+and+information+hiding&btnG=) была напечатана в книге [Essays on Object-Oriented Software Engineering](https://www.amazon.com/Essays-Object-Oriented-Software-Engineering-Edward/dp/0132888955) и датируется 1993 годом (но пдф книги, чтобы точно в этом убедиться, я найти не смог).
 
 Хороший аргумент в пользу точки зрения о том, что инкапсуляция - это только про объединение вместе данных и методов.
 
@@ -102,10 +102,12 @@ published: false
 
 Rogers 2001 - это уже известная нам статья на которую ссылается википедия и по мению автора ответа: "Взгляд на то что инкапсуляция сводится к объединению данных и методов вместе противоречит почти всем примерам использования этого термина в академической литературе за почти 28 лет предшествовавших этой статье".
 
-Но самое интересное - это конечно то, что по в ответе упоминается происхождение термина инкапсуляция - его ввёл Stephen N. Zitles в статье ["Procedural Encapsulation: A Linguistic Protection Technique"](https://dl.acm.org/doi/pdf/10.1145/800021.808305), я попробовал найти более ранние упоминания инкапсуляции и не нашёл, так что похоже -  это правда. В этой статье автор берёт для примера поток операционной системы и рассматривает техники, которые бы помогли представить этот поток, только в качестве операций (процедур), которые над потоком могут производиться и скрыть от клиента сами данные, над которыми эти операции прозводятся.
+Но самое интересное - это конечно то, что в ответе упоминается происхождение термина инкапсуляция - его ввёл Stephen N. Zitles в статье ["Procedural Encapsulation: A Linguistic Protection Technique"](https://dl.acm.org/doi/pdf/10.1145/800021.808305), я попробовал найти более ранние упоминания инкапсуляции и не нашёл, так что похоже -  это правда. В этой статье автор берёт для примера поток операционной системы и рассматривает техники, которые бы помогли представить этот поток, только в качестве операций (процедур), которые над потоком могут производиться и скрыть от клиента сами данные, над которыми эти операции прозводятся.
 
 И вот его определение инкапсуляции:
 
 >We will use the term procedural encapsulation to refer to the technique of representing system components in terms of one or more procedures such that interactions among compoments are limited to procedure calls
+>
+>The term "procedural encapsulation" is derived from the fact that the procedures encapsulate or isolate the representational aspects of the data. 
 
-То есть с самого своего первого использования слово инкапсуляция подразумевало сокрытие информации. Ну а вы теперь, надеюсь, знаете, что нужно ответить на собеседовании, если вас спросят: Что такое инкапсуляция?
+То есть с самого своего первого использования слово инкапсуляция подразумевало сокрытие информации. Ну а вы теперь, надеюсь, знаете, что нужно ответить на собеседовании, если вас спросят: "Что такое инкапсуляция?" - нужно ответить: "Инкапсуляция - это сложно".
