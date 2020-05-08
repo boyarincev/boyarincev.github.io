@@ -1,6 +1,6 @@
 ---	
 title: Инкапсуляция - что ты такое?
-tags: oop, misconceptions
+tags: oop misconceptions
 published: true
 ---	
 
