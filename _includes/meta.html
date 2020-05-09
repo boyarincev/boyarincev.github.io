@@ -6,7 +6,7 @@
     {% if page.excerpt %}
     <meta name="description" content="{{ page.excerpt | strip_html }}" />
     <meta property="og:description" content="{{ page.excerpt | strip_html }}" />
-    <meta property="published_date" content="{{ page.date }}" />
+    <meta property="published_date" content="{{ page.date.UTC.Unix }}" />
     {% else %}
     <meta name="description" content="{{ site.description }}">
     <meta property="og:description" content="{{ site.description }}" />
