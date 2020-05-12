@@ -40,7 +40,7 @@ published: true
 
 >Абстракция говорит: "Вы можете рассмотреть объект с общей точки зрения". Инкапсуляция добавляет: "Более того, вы не можете рассмотреть объект с иной точки зрения".
 >
->---
+>...
 >Инкапсуляция позволяет вам смотреть на дом, но не даёт подойти достаточно близко, чтобы узнать, из чего сделана дверь. Инкапсуляция позволяет вам знать о существовании двери, о том открыта она или заперта, но при этом вы не можете узнать, из чего она сделана.
 >
 >(Глава 5 Проектирование при конструировании, 87 стр.)
@@ -62,7 +62,8 @@ published: true
 И тут мой оппонент находит документ ["Abstraction, Encapsulation, and Information Hiding"](http://www.tonymarston.co.uk/php-mysql/abstraction.txt) за авторством Edward V. Berard:
 
 >I recently read a magazine article that said, "Encapsulation is just a fancy name for information hiding." Since the writer was non-technical, I just assumed that he was attempting to show that he really did not understand technical matters.
->-----------------------
+>
+>...
 >As a process, encapsulation means the act of enclosing one or more items within a (physical or logical) container. Encapsulation, as an entity, refers to a package or an enclosure that holds (contains, encloses) one or more items. It is extremely important to note that nothing is said about "the walls of the enclosure." Specifically, they may be "transparent," "translucent," or even "opaque."
 
 [Edward V. Berard](https://en.wikiquote.org/wiki/Edward_V._Berard) похоже более менее известная фигура, а статья судя по [scholar.google.com](https://scholar.google.com/scholar?hl=ru&as_sdt=0%2C5&as_ylo=1971&as_yhi=2000&q=Edward+V.+Berard+Abstraction%2C+encapsulation%2C+and+information+hiding&btnG=) была напечатана в книге ["Essays on Object-Oriented Software Engineering"](https://www.amazon.com/Essays-Object-Oriented-Software-Engineering-Edward/dp/0132888955) и датируется 1993 годом (но пдф книги, чтобы лично в этом убедиться я не нашёл).
@@ -80,9 +81,11 @@ published: true
 Но встречается и [другой взгляд на инкапсуляцию](https://stackoverflow.com/a/28614407/5402731):
 
 >Encapsulation is probably the most misunderstood concept of OOP.
->-----------------------
+>
+>...
 >Encapsulation is NOT data hiding!
->-----------------------
+>
+>...
 >This doesn't require data hiding at all. The advantage is that the code is more manageable, because you can clearly see all the related "things" (that is, data and functions) grouped together, so at a glance you know what you have (data) and what you can do with it (methods).
 
 А в качестве рефференсов к ответу уже известные нам статьи ["Encapsulation is not information hiding"](http://www.javaworld.com/article/2075271/core-java/encapsulation-is-not-information-hiding.html) и ["Abstraction, Encapsulation, and Information Hiding"](http://www.tonymarston.co.uk/php-mysql/abstraction.txt) 
@@ -112,11 +115,13 @@ published: true
 >We will use the term procedural encapsulation to refer to the technique of representing system components in terms of one or more procedures such that interactions among compoments are limited to procedure calls
 >When only the defined operations are used, a program is independent of the particular representation
 chosen for a stream. **The term "procedural encapsulation" is derived from the fact that the procedures encapsulate or isolate the representational aspects of the data.**
->-----------------------
+>
+>...
 >**Using the technique of encapsulation, a data type is completely characterized by the set of operations defined on the data of that type and the observable relationships between those operations.**
->-----------------------
+>
+>...
 >Procedural encapsulation also supports the "minimal assumptions" property. When each module is a set of related procedures, the assumptions about one module which can be exploited by another module are limited by the ways in which each procedure can access other procedures.
->-----------------------
+>...
 >**Procedural encapsulation** is a useful technique for building modular, reliable operating systems. With appropriate support from the operating system, it **can provide protection for data objects. Both accidental destruction or
 modification, and intentional subversion are prevented.** This form of protection is easy to use correctly since it is integrated with a natural building block for system components: procedures. The set of assumptions that can be made
 about a module is minimized. Because **representational details are encapsulated within procedures, the representation cannot be manipulated nor its form discovered. Therefore, the representation can be modified to fix bugs or to enhance performance without introducing problems caused by invalidating assumptions made in other modules.**
