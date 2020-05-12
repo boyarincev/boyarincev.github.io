@@ -127,6 +127,7 @@ chosen for a stream. **The term "procedural encapsulation" is derived from the f
 >...
 >
 >Procedural encapsulation also supports the "minimal assumptions" property. When each module is a set of related procedures, the assumptions about one module which can be exploited by another module are limited by the ways in which each procedure can access other procedures.
+>
 >...
 >
 >**Procedural encapsulation** is a useful technique for building modular, reliable operating systems. With appropriate support from the operating system, it **can provide protection for data objects. Both accidental destruction or
