@@ -62,7 +62,7 @@ published: true
 
 И тут мой оппонент находит документ ["Abstraction, Encapsulation, and Information Hiding"](http://www.tonymarston.co.uk/php-mysql/abstraction.txt) за авторством Edward V. Berard:
 
->I recently read a magazine article that said, "Encapsulation is just a fancy name for information hiding." Since the writer was non-technical, I just assumed that he was attempting to show that he really did not understand technical matters.
+>I recently read a magazine article that said, **"Encapsulation is just a fancy name for information hiding." Since the writer was non-technical, I just assumed that he was attempting to show that he really did not understand technical matters.**
 >
 >...
 >
@@ -100,13 +100,13 @@ published: true
 >
 >The concept of "information hiding" was first described by [Parnas (1971)](http://repository.cmu.edu/compsci/1829/) who suggested that access to information should be restricted to reduce the interconnectedness of a system. He proposed that this would facilitate splitting of a system into modules while maintaining a user-friendly external interface and allowing implementation details to be changed without affecting clients.
 >
->The term "encapsulation" was coined by [Zilles (1973)](http://dl.acm.org/citation.cfm?doid=800021.808305) to describe the use of procedures to control access to underlying data in order to reduce system complexity and protect data from dangerous modification.
+>**The term "encapsulation" was coined by [Zilles (1973)](http://dl.acm.org/citation.cfm?doid=800021.808305) to describe the use of procedures to control access to underlying data in order to reduce system complexity and protect data from dangerous modification.**
 >
 >Subsequently, [Parnas (1978)](http://dl.acm.org/citation.cfm?id=800099.803218) described information hiding and encapsulation (and abstraction) as synonymous terms, which describe the hiding of details of a system that are likely to change. However, distinctions have been drawn between information hiding and encapsulation, such as by [Micallef (1987)](http://dl.acm.org/citation.cfm?id=36160.36167), who described encapsulation as "the strict enforcement of information hiding". Some authors, such as [Cohen (1984)](http://doi.acm.org/10.1145/948415.948418) and [Abreu and Melo (1996)](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.49.3479) describe "encapsulation mechanisms", especially in object-oriented programming languages, as allowing information hiding.
 >
 >[Meyers (2000)](http://www.drdobbs.com/cpp/how-non-member-functions-improve-encapsu/184401197) suggests that the degree to which a piece of code is encapsulated depends on the amount of code which would be broken if it changed. In this sense, private data and methods are more encapsulated the fewer methods by which they can be accessed. In contrast, public data and methods are completely unencapsulated, as the amount of code by which they can be accessed is unknown.
 >
->Conversely, [Rogers (2001)](http://www.javaworld.com/article/2075271/core-java/encapsulation-is-not-information-hiding.html) suggests that encapsulation is simply the language mechanism that allows data to be bundled with methods that operate on that data. He claims that encapsulation fundamentally has nothing to do with information hiding. However, this definition is counter to almost all usage of the term in the academic literature in the 28 years prior to the publication of his article. There are a few other examples of this usage, for example [Archer and Stinson (1995)](http://repository.cmu.edu/sei/214/), but they are few and far between and not particularly notable.
+>**Conversely, [Rogers (2001)](http://www.javaworld.com/article/2075271/core-java/encapsulation-is-not-information-hiding.html) suggests that encapsulation is simply the language mechanism that allows data to be bundled with methods that operate on that data. He claims that encapsulation fundamentally has nothing to do with information hiding. However, this definition is counter to almost all usage of the term in the academic literature in the 28 years prior to the publication of his article. There are a few other examples of this usage, for example [Archer and Stinson (1995)](http://repository.cmu.edu/sei/214/), but they are few and far between and not particularly notable.**
 >
 >In conclusion, information hiding is the idea that information should be hidden so that a design can be changed without affecting clients. This allows for increased flexibility and robustness. Encapsulation may be considered to be the same as information hiding, but the term is often used to describe the practical implementation of information hiding, especially in object-oriented programming.
 
