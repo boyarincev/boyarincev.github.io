@@ -240,5 +240,5 @@ Console.WriteLine($"{nameof(resultnumber)} = {nameof(signmultiplyer)} * {nameof(
 
 ## Дополнительные ресурсы для чтения
 
-* [0.30000000000000004.com/](https://0.30000000000000004.com/)
+* [0.30000000000000004.com](https://0.30000000000000004.com/)
 * [What Every Computer Scientist Should Know About Floating-Point Arithmetic](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html)
