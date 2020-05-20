@@ -6,11 +6,12 @@ published: false
 
 ## В чём проблема
 
-```
+```charp
 enum SomeEnum
 {
   One,
-  Two
+  Two,
+  Three
 }
 
 void someFunc()
@@ -55,6 +56,94 @@ void someFunc()
 Здесь я буду рассматривать вопрос "правильности" используемого типа, только с точки зррения семантической релевантности использования конкретного типа исключения, в конкретной ситуации.
 
 ## Какие исключения подходят для выбрасывания из switch
+
+### ArgumentException
+
+> Исключение, которое выдается, если один из передаваемых методу аргументов является недопустимым.
+
+[ArgumentException](https://docs.microsoft.com/ru-ru/dotnet/api/system.argumentexception?view=netcore-3.1) отличный вариант, но нужно понимать, что семантика его использования предполагает то, что значение enum'а пришло как параметр метода. 
+
+Поэтому пример кода в заголовке статьи не подойдёт для этой ситуации. С другой стороны, обработка значения enum всегда может быть вынесена в отдельный метод, так что значение будет являться параметром этого метода:
+
+```charp
+enum SomeEnum
+{
+  One,
+  Two,
+  Three
+}
+
+void someFunc()
+{
+  SomeEnum value = someOtherFunc();
+  HandleSomeEnum(value);
+}
+
+void HandleSomeEnum(SomeEnum value)
+{
+  switch(value)
+  {
+     case One:
+       //Обрабатываем
+       ...
+       break;
+     case Two:
+      //Обрабатываем
+       ...
+       break;
+     default:
+       throw new ArgumentException(message: $"Unexpected enum value: {value}", paramName: nameof(value));
+  }
+}
+```
+
+### ArgumentOutOfRangeException
+
+> The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
+
+[ArgumentOutOfRangeException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentoutofrangeexception?view=netcore-3.1) - наследуется от ArgumentException и тоже подразумевает, что обрабатываемое значение является параметром метода. Отличием от ArgumentException является то, что конструктор принимает текущее значение параметра отдельным параметром (не нужно передавать его как часть сообщения об ошибке).
+
+```charp
+enum SomeEnum
+{
+  One,
+  Two,
+  Three
+}
+
+void someFunc()
+{
+  SomeEnum value = someOtherFunc();
+  HandleSomeEnum(value);
+}
+
+void HandleSomeEnum(SomeEnum value)
+{
+  switch(value)
+  {
+     case One:
+       //Обрабатываем
+       ...
+       break;
+     case Two:
+      //Обрабатываем
+       ...
+       break;
+     default:
+       throw new ArgumentOurOfRangeException(paramName: nameof(value), actualValue: value, message: "Unexpected enum value");
+  }
+}
+```
+
+Решарпер, например, раньше использовал именно этот тип исключения при автогенерации switch/case блока (возможно на данный момент это уже не так).
+
+### InvalidEnumArgumentException
+
+>The exception thrown when using invalid arguments that are enumerators.
+>
+>This exception is thrown if you pass an invalid enumeration value to a method or when setting a property.
+
+[InvalidEnumArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.invalidenumargumentexception?view=netcore-3.1) - малоизвестный тип исключения, а всё из-за пространства имён: `System.ComponentModel` и сборки в которую он помещён: `System.ComponentModel.Primitives.dll`
 
 ### InvalidOperationException
 
