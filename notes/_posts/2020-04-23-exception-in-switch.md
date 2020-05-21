@@ -228,5 +228,5 @@ class SomeEnumClass
 >
 >You might choose to throw a NotImplementedException exception in properties or methods in your own types when the that member is still in development and will only later be implemented in production code. In other words, a NotImplementedException exception should be synonymous with "still in development."
 
-[NotImplementedException](https://docs.microsoft.com/en-us/dotnet/api/system.notimplementedexception?view=netcore-3.1) всё-таки предполагает, что метод (или геттер/сеттер) не реализованы целиком, поэтому контекст пропущенного обработчика в switch здесь не очень подходит.
+[NotImplementedException](https://docs.microsoft.com/en-us/dotnet/api/system.notimplementedexception?view=netcore-3.1) всё-таки предполагает, что метод (или геттер/сеттер) не реализованы целиком, поэтому контекст пропущенного обработчика в switch здесь не очень подходит, если только вы действительно ещё не успели реализовать все обработчики и планируете это сделать в будущем.
 
