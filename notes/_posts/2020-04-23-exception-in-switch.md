@@ -216,7 +216,6 @@ class SomeEnumClass
        default:
          throw new InvalidOperationException(message: $"Unexpected enum value: {someEnumField}");
     }
-}
-
+  }
 }
 ```
