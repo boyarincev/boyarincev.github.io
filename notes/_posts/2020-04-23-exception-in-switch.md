@@ -34,7 +34,7 @@ void someFunc()
 }
 ```
 
-Есть несколько вариантов типа выбрасываемого исключения, в этой заметке я хочу рассмотреть какое исключение, в какой ситуации, будет правильно использовать.
+Есть несколько вариантов типа выбрасываемого исключения, в этой заметке я хочу поразмышлять - какое исключение, в какой ситуации будет правильнее использовать.
 
 ## А нужно ли вообще бросать исключение
 
@@ -53,17 +53,17 @@ void someFunc()
 1. В программе существуют специальные обработчики для этого типа исключения
 2. Упрощение процесса поиска места возникновения и причины исключения, а также передача дополнительной информации о контексте возникновения исключения
 
-Здесь я буду рассматривать вопрос "правильности" используемого типа, только с точки зррения семантической релевантности использования конкретного типа исключения, в конкретной ситуации.
+Здесь я буду в большей мере рассматривать вопрос "правильности" используемого типа, с точки зррения семантической релевантности использования конкретного типа исключения, в конкретной ситуации.
 
 ## Какие исключения подходят для выбрасывания из switch
 
 ### ArgumentException
 
-> Исключение, которое выдается, если один из передаваемых методу аргументов является недопустимым.
+> The exception that is thrown when one of the arguments provided to a method is not valid.
 
 [ArgumentException](https://docs.microsoft.com/ru-ru/dotnet/api/system.argumentexception?view=netcore-3.1) отличный вариант, но нужно понимать, что семантика его использования предполагает то, что значение enum'а пришло как параметр метода. 
 
-Поэтому пример кода в заголовке статьи не подойдёт для этой ситуации. С другой стороны, обработка значения enum всегда может быть вынесена в отдельный метод, так что значение будет являться параметром этого метода:
+Поэтому пример кода в заголовке статьи не подойдёт для этой ситуации. С другой стороны, обработка значения enum всегда может быть вынесена в отдельный метод, так что значение будет являться параметром этого метода.
 
 ```charp
 enum SomeEnum
@@ -143,8 +143,80 @@ void HandleSomeEnum(SomeEnum value)
 >
 >This exception is thrown if you pass an invalid enumeration value to a method or when setting a property.
 
-[InvalidEnumArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.invalidenumargumentexception?view=netcore-3.1) - малоизвестный тип исключения, а всё из-за пространства имён: `System.ComponentModel` и сборки в которую он помещён: `System.ComponentModel.Primitives.dll`
+[InvalidEnumArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.invalidenumargumentexception?view=netcore-3.1) - малоизвестный тип исключения, а всё из-за пространства имён: `System.ComponentModel` и сборки в которую он помещён: `System.ComponentModel.Primitives.dll` - вряд ли будет хорошей идеей использовать ссылки на них бездумно по всему вашему приложению.
+
+> The [System.ComponentModel](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel?view=netcore-3.1) namespace provides classes that are used to implement the run-time and design-time behavior of components and controls. This namespace includes the base classes and interfaces for implementing attributes and type converters, binding to data sources, and licensing components.
+
+В остальном это мог бы быть идеальный тип исключения, который позволяет передать и необработанное исключение и тип Enum (за исключением случаев использования swith для типов: [C# Pattern Matching](https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#using-pattern-matching-switch-statements) - а не для Enum).
+
+```charp
+enum SomeEnum
+{
+  One,
+  Two,
+  Three
+}
+
+void someFunc()
+{
+  SomeEnum value = someOtherFunc();
+  HandleSomeEnum(value);
+}
+
+void HandleSomeEnum(SomeEnum value)
+{
+  switch(value)
+  {
+     case One:
+       //Обрабатываем
+       ...
+       break;
+     case Two:
+      //Обрабатываем
+       ...
+       break;
+     default:
+       throw new InvalidEnumArgumentException(paramName: nameof(value), invalidValue: value, enumClass: typeof(SomeEnum));
+  }
+}
+```
 
 ### InvalidOperationException
 
+> The exception that is thrown when a method call is invalid for the object's current state.
+>
+> InvalidOperationException is used in cases when the failure to invoke a method is caused by reasons other than invalid arguments. Typically, it is thrown when the state of an object cannot support the method call.
 
+[InvalidOperationException](https://docs.microsoft.com/ru-ru/dotnet/api/system.invalidoperationexception?view=netcore-3.1) очень популярный тип исключения для данной ситуации, но всё же семантика использования этого исключения, предполагает наличие некоторого внутреннего состояния объекта, для которого данная операция некорректна и само по себе отсутствие обработчика в switch, по моему мнению, не подходит под это требование. С другой стороны, если обрабатываемое значение - это часть внутреннего состояния, тогда использование InvalidOperationException оправданно.
+
+```charp
+enum SomeEnum
+{
+  One,
+  Two,
+  Three
+}
+
+class SomeEnumClass
+{
+  private SomeEnum someEnumField;
+
+  void someFunc()
+  { 
+    switch(value)
+    {
+       case One:
+         //Обрабатываем
+         ...
+         break;
+       case Two:
+        //Обрабатываем
+         ...
+         break;
+       default:
+         throw new InvalidOperationException(message: $"Unexpected enum value: {someEnumField}");
+    }
+}
+
+}
+```
