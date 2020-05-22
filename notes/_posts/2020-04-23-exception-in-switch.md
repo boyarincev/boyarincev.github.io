@@ -298,5 +298,5 @@ class SomeEnumClass
 ## Ссылки для дополнительного чтения
 
 1. [Correct exception to throw for an unhandled switch case for an argument?](https://stackoverflow.com/q/13644737/5402731)
-2. [What is the correct exception to throw for unhandled enum values?](What is the correct exception to throw for unhandled enum values?](https://stackoverflow.com/q/13645149/5402731)
+2. [What is the correct exception to throw for unhandled enum values?](https://stackoverflow.com/q/13645149/5402731)
 3. [Throwing exceptions in switch statements when no specified case can be handled](https://stackoverflow.com/q/3349540/5402731)
