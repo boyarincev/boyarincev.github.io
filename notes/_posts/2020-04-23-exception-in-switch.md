@@ -291,3 +291,12 @@ class SomeEnumClass
 
 [NotSupportedException](https://docs.microsoft.com/en-us/dotnet/api/system.notsupportedexception?view=netcore-3.1) оправданно использовать в случае, когда вы намеренно не поддерживаете значения отличные от тех, что обрабатываете (а не потому что забыли это сделать).
 
+## Итоги
+
+В разных ситуация могут подходить разные типы исключений, но наиболее универсальными являются типы ArgumentException и ArgumentOutOfRangeException, так как switch/case всегда может быть вынесен в отдельный метод, где проверяемое значение будет являться аргументом этого метода - такое поведение ко всему прочему ещё и будет согласовываться с принципом "Единственной Ответственности".
+
+## Ссылки для дополнительного чтения
+
+1. [Correct exception to throw for an unhandled switch case for an argument?](https://stackoverflow.com/q/13644737/5402731)
+2. [What is the correct exception to throw for unhandled enum values?](What is the correct exception to throw for unhandled enum values?](https://stackoverflow.com/q/13645149/5402731)
+3. [Throwing exceptions in switch statements when no specified case can be handled](https://stackoverflow.com/q/3349540/5402731)
