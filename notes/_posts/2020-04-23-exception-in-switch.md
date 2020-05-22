@@ -61,9 +61,9 @@ void someFunc()
 
 > The exception that is thrown when one of the arguments provided to a method is not valid.
 
-[ArgumentException](https://docs.microsoft.com/ru-ru/dotnet/api/system.argumentexception?view=netcore-3.1) отличный вариант, но нужно понимать, что семантика его использования предполагает то, что значение enum'а пришло как параметр метода. 
+[ArgumentException](https://docs.microsoft.com/ru-ru/dotnet/api/system.argumentexception?view=netcore-3.1) отличный вариант, но нужно понимать, что семантика его использования предполагает то, что обрабатываемое значение пришло как параметр метода. 
 
-Поэтому пример кода в заголовке статьи не подойдёт для этой ситуации. С другой стороны, обработка значения enum всегда может быть вынесена в отдельный метод, так что значение будет являться параметром этого метода.
+Поэтому пример кода в заголовке статьи не подойдёт для этой ситуации. С другой стороны, switch/case всегда может быть вынесен в отдельный метод, так что проверяемое значение будет являться параметром этого метода.
 
 ```charp
 enum SomeEnum
@@ -228,5 +228,12 @@ class SomeEnumClass
 >
 >You might choose to throw a NotImplementedException exception in properties or methods in your own types when the that member is still in development and will only later be implemented in production code. In other words, a NotImplementedException exception should be synonymous with "still in development."
 
-[NotImplementedException](https://docs.microsoft.com/en-us/dotnet/api/system.notimplementedexception?view=netcore-3.1) всё-таки предполагает, что метод (или геттер/сеттер) не реализованы целиком, поэтому контекст пропущенного обработчика в switch здесь не очень подходит, если только вы действительно ещё не успели реализовать все обработчики и планируете это сделать в будущем.
+[NotImplementedException](https://docs.microsoft.com/en-us/dotnet/api/system.notimplementedexception?view=netcore-3.1) всё-таки предполагает, явное намерение не реализовывать что-то - если вы действительно ещё не успели реализовать все обработчики и планируете это сделать в будущем, то этот тип исключения может подойти.
 
+### NotSupportedException
+
+> The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality.
+>
+> NotSupportedException indicates that no implementation exists for an invoked method or property.
+
+[NotSupportedException](https://docs.microsoft.com/en-us/dotnet/api/system.notsupportedexception?view=netcore-3.1) оправданно использовать в случае, когда вы намеренно не поддерживаете значения отличные от тех, что обрабатываете (а не потому что забыли это сделать).
