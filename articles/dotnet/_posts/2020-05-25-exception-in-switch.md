@@ -202,7 +202,7 @@ void HandleSomeEnum(SomeEnum value)
 
 > The [System.ComponentModel](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel?view=netcore-3.1) namespace provides classes that are used to implement the run-time and design-time behavior of components and controls. This namespace includes the base classes and interfaces for implementing attributes and type converters, binding to data sources, and licensing components.
 
-В остальном это мог бы быть идеальный тип исключения, который позволяет передать и необработанное исключение и тип Enum (за исключением случаев использования swith для типов: [C# Pattern Matching](https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#using-pattern-matching-switch-statements) - а не для Enum).
+В остальном это мог бы быть идеальный тип исключения, который позволяет передать и необработанное исключение и тип Enum, за исключением случаев использования swith для типов ([C# Pattern Matching](https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#using-pattern-matching-switch-statements)), а не для Enum).
 
 ```charp
 enum SomeEnum
