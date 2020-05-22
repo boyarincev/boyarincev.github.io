@@ -21,11 +21,11 @@ void someFunc()
   {
      case One:
        //Обрабатываем
-       ...
+       //...
        break;
      case Two:
       //Обрабатываем
-       ...
+       //...
        break;
      default:
        throw new Exception();   
@@ -54,6 +54,59 @@ void someFunc()
 2. Упрощение процесса поиска места возникновения и причины исключения, а также передача дополнительной информации о контексте возникновения исключения
 
 Здесь я буду в большей мере рассматривать вопрос "правильности" используемого типа, с точки зррения семантической релевантности использования конкретного типа исключения, в конкретной ситуации.
+
+## Switch/case конструкция - это антипаттерн, поэтому её вообще не нужно использовать
+
+Сама по себе конструкция switch/case - не антипаттерн, антипаттерн - это когда switch/case, по Enum или по какому-то диапазону типов дублируется много раз по всему приложению (потому что велика вероятность забыть обновить все блоки swith/case при добавлении нового значения Enum или нового типа). Для этой ситуации Бертран Мейер даже придумал специальный принцип, называющийся "Принцип единственного выбора".
+
+> Принцип единственного выбора: всякий раз, когда система программного обеспечения должна поддерживать множество альтернатив, их полный список должен быть известен только одному модулю системы.
+
+В статье [Open/Closed Principle](http://sergeyteplyakov.blogspot.com/2014/08/open-closed-principle.html) Сергей Тепляков немного пишет об этом.
+
+Поэтому если вы сможете обеспечить, чтобы switch/case конструкция на каждый Enum или диапазон типов, повторялась в приложении только один раз, то такое использование точно никто антипаттерном не назовёт.
+
+Лично я для решения этой проблемы использую функциональную версию паттерна "Визитор", которую Сергей Тепляков описал в статье [Open/Closed Principle. ФП vs. ООП](http://sergeyteplyakov.blogspot.com/2014/09/openclosed-principle-fp-vs-oop.html).  
+Применительно к нашему Enum из примеров, выглядит примерно так:
+
+```charp
+enum SomeEnum
+{
+    One,
+    Two,
+    Three
+}
+
+static class SomeEnumExtensions
+{
+    public static void Match(
+      this SomeEnum value,
+      Action<SomeEnum> oneMatch,
+      Action<SomeEnum> twoMatch)
+    {
+        switch (value)
+        {
+            case SomeEnum.One:
+                oneMatch(value);
+                break;
+            case SomeEnum.Two:
+                twoMatch(value);
+                break;
+            default:
+                throw new ArgumentException(message: $"Unexpected enum value: {value}", paramName: nameof(value));
+        }
+    }
+}
+
+void someFunc()
+{
+    SomeEnum value = SomeEnum.One;
+    value.Match(oneValue => {/*обрабатываем*/}, twoValue => {/*обрабатываем*/});
+}
+```
+
+Если для работы с Enum будет использоваться только метод Match, то при добавлении нового значения Enum, вам нужно будет обновить его сигнатуру, добавив туда новый обработчик, и вы будете защищены ещё на стадии компиляции от того, что не забыли учесть везде новое значение.
+
+Альтернативный способ решения этой проблемы предлагается в статье [Enum-switch антипаттерн](https://habr.com/ru/post/312792/). В ней автор предлагает собрать все операции выполняемые над Enum в один интерфейс и в классе специфичном для каждого значения Enum реализовать их и вообще отказаться от switch/case.
 
 ## Какие исключения подходят для выбрасывания из switch
 
@@ -85,11 +138,11 @@ void HandleSomeEnum(SomeEnum value)
   {
      case One:
        //Обрабатываем
-       ...
+       //...
        break;
      case Two:
       //Обрабатываем
-       ...
+       //...
        break;
      default:
        throw new ArgumentException(message: $"Unexpected enum value: {value}", paramName: nameof(value));
@@ -123,11 +176,11 @@ void HandleSomeEnum(SomeEnum value)
   {
      case One:
        //Обрабатываем
-       ...
+       //...
        break;
      case Two:
       //Обрабатываем
-       ...
+       //...
        break;
      default:
        throw new ArgumentOurOfRangeException(paramName: nameof(value), actualValue: value, message: "Unexpected enum value");
@@ -169,11 +222,11 @@ void HandleSomeEnum(SomeEnum value)
   {
      case One:
        //Обрабатываем
-       ...
+       //...
        break;
      case Two:
       //Обрабатываем
-       ...
+       //...
        break;
      default:
        throw new InvalidEnumArgumentException(paramName: nameof(value), invalidValue: value, enumClass: typeof(SomeEnum));
@@ -207,11 +260,11 @@ class SomeEnumClass
     {
        case One:
          //Обрабатываем
-         ...
+         //...
          break;
        case Two:
         //Обрабатываем
-         ...
+         //...
          break;
        default:
          throw new InvalidOperationException(message: $"Unexpected enum value: {someEnumField}");
@@ -237,3 +290,4 @@ class SomeEnumClass
 > NotSupportedException indicates that no implementation exists for an invoked method or property.
 
 [NotSupportedException](https://docs.microsoft.com/en-us/dotnet/api/system.notsupportedexception?view=netcore-3.1) оправданно использовать в случае, когда вы намеренно не поддерживаете значения отличные от тех, что обрабатываете (а не потому что забыли это сделать).
+
