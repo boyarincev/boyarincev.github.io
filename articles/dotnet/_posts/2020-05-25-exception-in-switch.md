@@ -1,7 +1,7 @@
 ---	
 title: Какое исключение бросать в swith, если подходящего case не нашлось?
 tags: cleancode
-published: false	
+published: true	
 ---	
 
 ## В чём проблема
