@@ -6,7 +6,7 @@ published: true
 
 ## В чём проблема
 
-```charp
+```csharp
 enum SomeEnum
 {
   One,
