@@ -29,12 +29,12 @@ void someFunc()
        break;
      default:
        throw new Exception();   
-       //Какое исключение правильно бросать?
+       //Какое исключение правильно бросить?
   }
 }
 ```
 
-Есть несколько вариантов типа выбрасываемого исключения, в этой заметке я хочу поразмышлять - какое исключение, в какой ситуации будет правильнее использовать.
+Есть несколько вариантов типа выбрасываемого исключения из switch/case, в этой статье я хочу поразмышлять - какое исключение, в какой ситуации будет правильнее использовать.
 
 <!--excerpt-->
 
@@ -106,9 +106,9 @@ void someFunc()
 }
 ```
 
-Если для работы с Enum будет использоваться только метод Match, то при добавлении нового значения Enum, вам нужно будет обновить его сигнатуру, добавив туда новый обработчик, и вы будете защищены ещё на стадии компиляции от того, что не забыли учесть везде новое значение.
+Если для работы с Enum будет использоваться только метод Match, то при добавлении нового значения Enum, вам нужно будет обновить его сигнатуру, добавив туда новый обработчик, и вы будете защищены ещё на стадии компиляции от того, что забыли где-то учесть новое значение.
 
-Альтернативный способ решения этой проблемы предлагается в статье [Enum-switch антипаттерн](https://habr.com/ru/post/312792/). В ней автор предлагает собрать все операции выполняемые над Enum в один интерфейс и в классе специфичном для каждого значения Enum реализовать их и вообще отказаться от switch/case.
+Альтернативный способ решения этой проблемы предлагается в статье [Enum-switch антипаттерн](https://habr.com/ru/post/312792/). В ней автор предлагает собрать все операции выполняемые над Enum в один интерфейс и в классе специфичном для каждого значения Enum реализовать их и вообще отказаться от switch/case - вдаваться в подробности не буду, но мне этот подход не кажется универсальным и удачным.
 
 ## Какие исключения подходят для выбрасывания из switch
 
@@ -156,7 +156,7 @@ void HandleSomeEnum(SomeEnum value)
 
 > The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
 
-[ArgumentOutOfRangeException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentoutofrangeexception?view=netcore-3.1) - наследуется от ArgumentException и тоже подразумевает, что обрабатываемое значение является параметром метода. Отличием от ArgumentException является то, что конструктор принимает текущее значение параметра отдельным параметром (не нужно передавать его как часть сообщения об ошибке).
+[ArgumentOutOfRangeException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentoutofrangeexception?view=netcore-3.1) - наследуется от `ArgumentException` и тоже подразумевает, что обрабатываемое значение является параметром метода. Отличием от ArgumentException является то, что конструктор принимает текущее значение параметра отдельным параметром (не нужно передавать его как часть сообщения об ошибке).
 
 ```charp
 enum SomeEnum
@@ -198,11 +198,11 @@ void HandleSomeEnum(SomeEnum value)
 >
 >This exception is thrown if you pass an invalid enumeration value to a method or when setting a property.
 
-[InvalidEnumArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.invalidenumargumentexception?view=netcore-3.1) - малоизвестный тип исключения, а всё из-за пространства имён: `System.ComponentModel` и сборки в которую он помещён: `System.ComponentModel.Primitives.dll` - вряд ли будет хорошей идеей использовать ссылки на них бездумно по всему вашему приложению.
+[InvalidEnumArgumentException](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.invalidenumargumentexception?view=netcore-3.1) - малоизвестный тип исключения, а всё из-за пространства имён: `System.ComponentModel` и сборки в которую он помещён: `System.ComponentModel.Primitives.dll` - вряд ли будет хорошей идеей использовать ссылки на них бездумно по всему вашему приложению. Для него также актуально замечание про то, что обрабатываемое значение должно являться аргументом метода.
 
 > The [System.ComponentModel](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel?view=netcore-3.1) namespace provides classes that are used to implement the run-time and design-time behavior of components and controls. This namespace includes the base classes and interfaces for implementing attributes and type converters, binding to data sources, and licensing components.
 
-В остальном это мог бы быть идеальный тип исключения, который позволяет передать и необработанное исключение и тип Enum, за исключением случаев использования swith для типов ([C# Pattern Matching](https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#using-pattern-matching-switch-statements)), а не для Enum).
+В остальном это мог бы быть идеальный тип исключения, который позволяет передать и необработанное исключение и тип Enum, за исключением случаев использования swith для типов ([C# Pattern Matching](https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#using-pattern-matching-switch-statements)), а не для Enum.
 
 ```charp
 enum SomeEnum
@@ -242,7 +242,7 @@ void HandleSomeEnum(SomeEnum value)
 >
 > InvalidOperationException is used in cases when the failure to invoke a method is caused by reasons other than invalid arguments. Typically, it is thrown when the state of an object cannot support the method call.
 
-[InvalidOperationException](https://docs.microsoft.com/ru-ru/dotnet/api/system.invalidoperationexception?view=netcore-3.1) очень популярный тип исключения для данной ситуации, но всё же семантика использования этого исключения, предполагает наличие некоторого внутреннего состояния объекта, для которого данная операция некорректна и само по себе отсутствие обработчика в switch, по моему мнению, не подходит под это требование. С другой стороны, если обрабатываемое значение - это часть внутреннего состояния, тогда использование InvalidOperationException оправданно.
+[InvalidOperationException](https://docs.microsoft.com/ru-ru/dotnet/api/system.invalidoperationexception?view=netcore-3.1) очень популярный тип исключения для данной ситуации, но всё же семантика использования этого исключения, предполагает наличие некоторого внутреннего состояния объекта, для которого данная операция некорректна и само по себе отсутствие обработчика в switch, по моему мнению, не подходит под это требование. С другой стороны, если обрабатываемое значение - это часть внутреннего состояния, тогда использование `InvalidOperationException` оправданно.
 
 ```charp
 enum SomeEnum
@@ -295,7 +295,7 @@ class SomeEnumClass
 
 ## Итоги
 
-В разных ситуация могут подходить разные типы исключений, но наиболее универсальными являются типы ArgumentException и ArgumentOutOfRangeException, так как switch/case всегда может быть вынесен в отдельный метод, где проверяемое значение будет являться аргументом этого метода - такое поведение ко всему прочему ещё и будет согласовываться с принципом "Единственной Ответственности".
+В разных ситуация могут подходить разные типы исключений, но наиболее универсальными являются типы `ArgumentException` и `ArgumentOutOfRangeException`, так как switch/case всегда может быть вынесен в отдельный метод, где проверяемое значение будет являться аргументом этого метода - такое поведение ко всему прочему ещё и будет согласовываться с принципом "Единственной Ответственности".
 
 ## Ссылки для дополнительного чтения
 
