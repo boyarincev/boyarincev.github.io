@@ -156,7 +156,7 @@ void HandleSomeEnum(SomeEnum value)
 
 > The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
 
-[ArgumentOutOfRangeException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentoutofrangeexception?view=netcore-3.1) - наследуется от `ArgumentException` и тоже подразумевает, что обрабатываемое значение является параметром метода. Отличием от ArgumentException является то, что конструктор принимает текущее значение параметра отдельным параметром (не нужно передавать его как часть сообщения об ошибке).
+[ArgumentOutOfRangeException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentoutofrangeexception?view=netcore-3.1) - наследуется от `ArgumentException` и тоже подразумевает, что обрабатываемое значение является параметром метода. Отличием от `ArgumentException` является то, что конструктор принимает текущее значение параметра отдельным параметром (не нужно передавать его как часть сообщения об ошибке).
 
 ```charp
 enum SomeEnum
