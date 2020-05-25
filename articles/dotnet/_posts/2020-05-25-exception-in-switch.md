@@ -70,7 +70,7 @@ void someFunc()
 Лично я для решения этой проблемы использую функциональную версию паттерна "Визитор", которую Сергей Тепляков описал в статье [Open/Closed Principle. ФП vs. ООП](http://sergeyteplyakov.blogspot.com/2014/09/openclosed-principle-fp-vs-oop.html).  
 Применительно к нашему Enum из примеров, выглядит примерно так:
 
-```charp
+```csharp
 enum SomeEnum
 {
     One,
@@ -120,7 +120,7 @@ void someFunc()
 
 Поэтому пример кода в заголовке статьи не подойдёт для этой ситуации. С другой стороны, switch/case всегда может быть вынесен в отдельный метод, так что проверяемое значение будет являться параметром этого метода.
 
-```charp
+```csharp
 enum SomeEnum
 {
   One,
@@ -158,7 +158,7 @@ void HandleSomeEnum(SomeEnum value)
 
 [ArgumentOutOfRangeException](https://docs.microsoft.com/en-us/dotnet/api/system.argumentoutofrangeexception?view=netcore-3.1) - наследуется от `ArgumentException` и тоже подразумевает, что обрабатываемое значение является параметром метода. Отличием от `ArgumentException` является то, что конструктор принимает текущее значение параметра отдельным параметром (не нужно передавать его как часть сообщения об ошибке).
 
-```charp
+```csharp
 enum SomeEnum
 {
   One,
@@ -204,7 +204,7 @@ void HandleSomeEnum(SomeEnum value)
 
 В остальном это мог бы быть идеальный тип исключения, который позволяет передать и необработанное исключение и тип Enum, за исключением случаев использования swith для типов ([C# Pattern Matching](https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#using-pattern-matching-switch-statements)), а не для Enum.
 
-```charp
+```csharp
 enum SomeEnum
 {
   One,
@@ -244,7 +244,7 @@ void HandleSomeEnum(SomeEnum value)
 
 [InvalidOperationException](https://docs.microsoft.com/ru-ru/dotnet/api/system.invalidoperationexception?view=netcore-3.1) очень популярный тип исключения для данной ситуации, но всё же семантика использования этого исключения, предполагает наличие некоторого внутреннего состояния объекта, для которого данная операция некорректна и само по себе отсутствие обработчика в switch, по моему мнению, не подходит под это требование. С другой стороны, если обрабатываемое значение - это часть внутреннего состояния, тогда использование `InvalidOperationException` оправданно.
 
-```charp
+```csharp
 enum SomeEnum
 {
   One,
