@@ -1,5 +1,5 @@
 ---	
-title: Какое исключение бросать в swith, если подходящего case не нашлось?
+title: Какое исключение бросать в swith, если case не нашлось?
 tags: cleancode
 published: true	
 ---	
