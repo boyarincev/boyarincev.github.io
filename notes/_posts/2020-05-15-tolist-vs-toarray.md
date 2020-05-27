@@ -17,7 +17,7 @@ public static List<TSource> ToList<TSource>(this IEnumerable<TSource> source) {
 }
 ```
 
-Конструктор `List<T>` имеет "хак" на случай, если коллекция на которой он вызывается по-настоящему реализует интерсейс ICollection, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному.
+[Конструктор](https://referencesource.microsoft.com/#mscorlib/system/collections/generic/list.cs,74) `List<T>` имеет "хак" на случай, если коллекция на которой он вызывается по-настоящему реализует интерсейс ICollection, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному.
 
 ```csharp
 public List(IEnumerable<T> collection) {
