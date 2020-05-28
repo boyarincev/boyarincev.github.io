@@ -17,7 +17,7 @@ public static List<TSource> ToList<TSource>(this IEnumerable<TSource> source) {
 }
 ```
 
-[Конструктор](https://referencesource.microsoft.com/#mscorlib/system/collections/generic/list.cs,74) `List<T>` имеет "хак" на случай, если коллекция на которой он вызывается по-настоящему реализует интерсейс ICollection, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному.
+[Конструктор](https://referencesource.microsoft.com/#mscorlib/system/collections/generic/list.cs,74) `List<T>` имеет "хак" на случай, если коллекция на которой он вызывается по-настоящему реализует интерсейс ICollection, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному, а это в свою очередь приведёт к постепенному .
 
 ```csharp
 public List(IEnumerable<T> collection) {
@@ -53,4 +53,4 @@ public List(IEnumerable<T> collection) {
 }
 ```
 
-Думаю, все знают, что [List](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.generic.list-1?view=netcore-3.1) реализован внутри с помощью массива, но не многие
+Думаю, ни для кого не секрет, что [List](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.generic.list-1?view=netcore-3.1) реализован внутри с помощью массива, но не многие
