@@ -30,9 +30,9 @@ object[] array = new String[10];
 
 Прекрасный пример [протекающей абстракции](https://en.wikipedia.org/wiki/Leaky_abstraction) - приведя массив к типу IList, вы получите runtime-ошибку при [вызове Add на нём](https://docs.microsoft.com/ru-ru/dotnet/api/system.array?view=netcore-3.1#explicit-interface-implementations).
 
-Есть ещё вещи, которые нельзя отнести к минусам, скорее просто к особенностям.
-
 ### Массивы разрешают изменения в массиве при foreach, а List - нет
+
+Есть ещё вещи, которые нельзя отнести к минусам, скорее просто к особенностям.
 
 [Enumerator используемый List](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.enumerator?view=netcore-3.1) не разрешает изменения коллекции во время итерации, а [Enumerator используемый Array](https://github.com/dotnet/runtime/blob/v5.0.0-preview.4.20251.6/src/libraries/System.Private.CoreLib/src/System/Array.Enumerators.cs) разрешает. И такая разница в поведении вообще довольна опасна, так как вы можете использовать массив, всё под тем же многострадальным интерфейсом IList и при этом изменение массива при итерации у вас будет работать, а потом кто-то изменит нижележащий тип с массива на лист и вы получите runtime-ошибку.
 
