@@ -28,7 +28,7 @@ object[] array = new String[10];
 
 ### Массивы реализуют интерфейс IList, но не поддерживают операцию добавления элемента
 
-Приведя массив к интерфейсу [IList](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist?view=netcore-3.1), вы получите runtime-ошибку при [вызове Add на нём](https://docs.microsoft.com/ru-ru/dotnet/api/system.array?view=netcore-3.1#explicit-interface-implementations). Да, IList имеет свойство [IsFixedSize](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist.isfixedsize?view=netcore-3.1#System_Collections_IList_IsFixedSize) для того, чтобы узнать изменяемая ли коллекция находится под капотом, но по мне так это просто ещё один пример [протекающей абстракции](https://en.wikipedia.org/wiki/Leaky_abstraction) - думаю, что свойство было добавлено только потому что массив реализует интерфейс IList.
+Приведя массив к интерфейсу [IList](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist?view=netcore-3.1), вы получите runtime-ошибку при [вызове Add на нём](https://docs.microsoft.com/ru-ru/dotnet/api/system.array?view=netcore-3.1#explicit-interface-implementations). Да, IList имеет свойство [IsFixedSize](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist.isfixedsize?view=netcore-3.1#System_Collections_IList_IsFixedSize) для того, чтобы узнать изменяемая ли коллекция находится под капотом, но по мне так это просто ещё один пример [протекающей абстракции](https://en.wikipedia.org/wiki/Leaky_abstraction) - думаю, что свойство было добавлено в интерфейс только потому что массив реализует интерфейс IList.
 
 Есть ещё вещи, которые нельзя отнести к минусам, скорее просто к особенностям.
 
