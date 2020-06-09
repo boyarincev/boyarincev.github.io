@@ -8,7 +8,7 @@ published: false
 
 ## Какая концептуальная разница что использовать
 
-Cначала нужно остановится на том, есть ли какие-то другие причины, кроме производительности, выбрать тот или другой метод. При использовании `ToList()` результатом операции будет [List](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.generic.list-1?view=netcore-3.1), а при использовании `ToArray()` - [Array](https://docs.microsoft.com/ru-ru/dotnet/api/system.array?view=netcore-3.1#methods). Соответственно выбор метода сводится к вопросу, что для вас предпочтительнее на выходе.
+Cначала нужно остановится на том, есть ли какие-то другие причины, кроме производительности, выбрать тот или иной метод. При использовании `ToList()` результатом операции будет [List](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.generic.list-1?view=netcore-3.1), а при использовании `ToArray()` - [Array](https://docs.microsoft.com/ru-ru/dotnet/api/system.array?view=netcore-3.1#methods). Соответственно выбор метода сводится к вопросу, что для вас предпочтительнее на выходе.
 
 Лично для себя я не вижу каких-то преимуществ массива перед списком, а вот минусы у него есть.
 
