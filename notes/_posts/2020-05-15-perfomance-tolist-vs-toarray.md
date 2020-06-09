@@ -89,58 +89,77 @@ foreach (var x in source)
 
 ## Как реализован ToList
 
-[Реализация](https://referencesource.microsoft.com/#System.Core/System/Linq/Enumerable.cs,947) `ToList()` - это просто вызов конструктора `List<T>`
+[Реализация](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/ToCollection.cs#L23) `ToList()` - это либо вызов `ToList()` на интерфейсе `IIListProvider`, либо просто вызов конструктора списка.
 
 ```csharp
-public static List<TSource> ToList<TSource>(this IEnumerable<TSource> source) {
-    if (source == null) throw Error.ArgumentNull("source");
-    return new List<TSource>(source);
-}
+return source is IIListProvider<TSource> listProvider ? listProvider.ToList() : new List<TSource>(source);
 ```
 
-[Конструктор](https://referencesource.microsoft.com/#mscorlib/system/collections/generic/list.cs,74) `List<T>` имеет "хак" на случай, если коллекция на которой он вызывается по-настоящему реализует интерсейс ICollection, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному.
+На `IIListProvider` остановимся позже.
+
+[Конструктор](https://github.com/dotnet/corefx/blob/v3.1.0/src/Common/src/CoreLib/System/Collections/Generic/List.cs#L61) списка имеет "хак" на случай, если последовательность на которой он вызывается по-настоящему реализует интерсейс `ICollection`, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному (в предыдущем параграфе я описал как работает такое добавление).
 
 ```csharp
-public List(IEnumerable<T> collection) {
-    if (collection==null)
-        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.collection);
-    Contract.EndContractBlock();
-
-    ICollection<T> c = collection as ICollection<T>;
-    if( c != null) {
-        int count = c.Count;
-        if (count == 0)
+if (collection is ICollection<T> c)
+{
+    int count = c.Count;
+    if (count == 0)
+    {
+        _items = s_emptyArray;
+    }
+    else
+    {
+        _items = new T[count];
+        c.CopyTo(_items, 0);
+        _size = count;
+    }
+}
+else
+{
+    _size = 0;
+    _items = s_emptyArray;
+    using (IEnumerator<T> en = collection!.GetEnumerator())
+    {
+        while (en.MoveNext())
         {
-            _items = _emptyArray;
-        }
-        else {
-            _items = new T[count];
-            c.CopyTo(_items, 0);
-            _size = count;
-        }
-    }    
-    else {                
-        _size = 0;
-        _items = _emptyArray;
-        // This enumerable could be empty.  Let Add allocate a new array, if needed.
-        // Note it will also go to _defaultCapacity first, not 1, then 2, etc.
-
-        using(IEnumerator<T> en = collection.GetEnumerator()) {
-            while(en.MoveNext()) {
-                Add(en.Current);                                    
-            }
+            Add(en.Current);
         }
     }
 }
 ```
 
+Из-за проверки на реализацию `ICollection` тестировать производительность `ToList()` просто создав список и приведя его к интерфейсу `IEnumerable` - бессмысленно, так как в этом случае материализация будет намного быстрее.
+
 ## Как реализован ToArray
 
-Реализация `ToArray()` - это просто вызов конструктора Buffer и последующий вызов `ToArray()` на созданном экземпляре Buffer.
+[Реализация](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/ToCollection.cs#L11) `ToArray()` - это либо вызов `ToArray()` на `IIListProvider`, либо вызов `EnumerableHelpers.ToArray(source)`.
 
 ```csharp
-public static TSource[] ToArray<TSource>(this IEnumerable<TSource> source) {
-    if (source == null) throw Error.ArgumentNull("source");
-    return new Buffer<TSource>(source).ToArray();
-}
+return source is IIListProvider<TSource> arrayProvider
+    ? arrayProvider.ToArray()
+    : EnumerableHelpers.ToArray(source);
 ```
+
+[Реализация](https://github.com/dotnet/corefx/blob/v3.1.0/src/Common/src/System/Collections/Generic/EnumerableHelpers.Linq.cs#L93) `ToArray()` в `EnumerableHelper`.
+
+```csharp
+if (source is ICollection<T> collection)
+{
+    int count = collection.Count;
+    if (count == 0)
+    {
+        return Array.Empty<T>();
+    }
+
+    var result = new T[count];
+    collection.CopyTo(result, arrayIndex: 0);
+    return result;
+}
+
+var builder = new LargeArrayBuilder<T>(initialize: true);
+builder.AddRange(source);
+return builder.ToArray();
+```
+
+Опять же проверка на `ICollection` и сразу создание массива нужного размера и, видимо, механизм динамического создания массива - `LargeArrayBuilder`.
+
