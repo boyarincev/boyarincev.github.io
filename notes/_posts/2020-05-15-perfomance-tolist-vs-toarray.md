@@ -10,7 +10,7 @@ published: false
 
 Cначала нужно остановится на том, есть ли какие-то другие причины, кроме производительности, выбрать тот или иной метод. При использовании `ToList()` результатом операции будет [List](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.generic.list-1?view=netcore-3.1), а при использовании `ToArray()` - [Array](https://docs.microsoft.com/ru-ru/dotnet/api/system.array?view=netcore-3.1#methods). Соответственно выбор метода сводится к вопросу, что для вас предпочтительнее на выходе.
 
-Лично для себя я не вижу каких-то преимуществ массива перед списком, а вот минусы у него есть.
+Я не вижу каких-то преимуществ массива перед списком, а вот минусы у него есть.
 
 ### Массивы не типобезопасны при ковариации
 
@@ -28,13 +28,13 @@ object[] array = new String[10];
 
 ### Массивы реализуют интерфейс IList, но не поддерживают операцию добавления элемента
 
-Приведя массив к интерфейсу [IList](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist?view=netcore-3.1), вы получите runtime-ошибку при [вызове Add на нём](https://docs.microsoft.com/ru-ru/dotnet/api/system.array?view=netcore-3.1#explicit-interface-implementations). Да, IList имеет свойство [IsFixedSize](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist.isfixedsize?view=netcore-3.1#System_Collections_IList_IsFixedSize) для того, чтобы узнать изменяемая ли коллекция находится под капотом, но по мне так это просто ещё один пример [протекающей абстракции](https://en.wikipedia.org/wiki/Leaky_abstraction) - не удивлюсь, если свойство было добавлено в интерфейс только потому что массив реализует интерфейс IList.
+Приведя массив к интерфейсу [IList](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist?view=netcore-3.1), вы получите runtime-ошибку при [вызове Add на нём](https://docs.microsoft.com/ru-ru/dotnet/api/system.array?view=netcore-3.1#explicit-interface-implementations). Да, `IList` имеет свойство [IsFixedSize](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist.isfixedsize?view=netcore-3.1#System_Collections_IList_IsFixedSize) для того, чтобы узнать изменяемая ли коллекция находится под капотом, но по мне так это просто ещё один пример [протекающей абстракции](https://en.wikipedia.org/wiki/Leaky_abstraction) - не удивлюсь, если свойство было добавлено в интерфейс только потому что массив реализует интерфейс `IList`.
 
 Есть ещё вещи, которые нельзя отнести к минусам, скорее просто к особенностям.
 
 ### Массивы разрешают изменения в массиве при foreach, а List - нет
 
-[Enumerator используемый List](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.enumerator?view=netcore-3.1) не разрешает изменения коллекции во время итерации, а [Enumerator используемый Array](https://github.com/dotnet/runtime/blob/v5.0.0-preview.4.20251.6/src/libraries/System.Private.CoreLib/src/System/Array.Enumerators.cs) разрешает. И такая разница в поведении вообще довольна опасна, так как вы можете использовать массив, всё под тем же многострадальным интерфейсом IList и при этом изменение массива при итерации у вас будет работать, а потом кто-то изменит нижележащий тип с массива на лист и вы получите runtime-ошибку.
+[Enumerator используемый List](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.enumerator?view=netcore-3.1) не разрешает изменения коллекции во время итерации, а [Enumerator используемый Array](https://github.com/dotnet/runtime/blob/v5.0.0-preview.4.20251.6/src/libraries/System.Private.CoreLib/src/System/Array.Enumerators.cs) разрешает. И такая разница в поведении вообще довольна опасна, так как вы можете использовать массив, всё под тем же многострадальным интерфейсом `IList` и при этом изменение массива при итерации у вас будет работать, а потом кто-то изменит нижележащий тип с массива на лист и вы получите runtime-ошибку.
 
 ```csharp
 IList<int> source = Enumerable.Range(1, 10).ToArray();
@@ -89,15 +89,15 @@ foreach (var x in source)
 
 ## Как реализован ToList()
 
-[Реализация](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/ToCollection.cs#L23) `ToList()` - это либо вызов `ToList()` на интерфейсе `IIListProvider`, либо просто вызов конструктора списка.
+[Реализация](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/ToCollection.cs#L23) `ToList()` - это либо вызов `ToList()` на интерфейсе [IIListProvider](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/IIListProvider.cs), либо просто вызов конструктора списка.
 
 ```csharp
 return source is IIListProvider<TSource> listProvider ? listProvider.ToList() : new List<TSource>(source);
 ```
 
-На `IIListProvider` остановимся позже.
+На `IIListProvider` остановимся позже, пока разберём конструктор списка принимающий последовательность - по этому пути выполнение пойдёт, если мы `ToList()` вызовем на любой обычной коллекции или массиве (потому что они не реализуют интерфейс `IIListProvider`).
 
-[Конструктор](https://github.com/dotnet/corefx/blob/v3.1.0/src/Common/src/CoreLib/System/Collections/Generic/List.cs#L61) списка имеет "хак" на случай, если последовательность на которой он вызывается по-настоящему реализует интерсейс `ICollection`, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному (в предыдущем параграфе я описал как работает такое добавление).
+[Конструктор](https://github.com/dotnet/corefx/blob/v3.1.0/src/Common/src/CoreLib/System/Collections/Generic/List.cs#L61) имеет "хак" на случай, если последовательность на которой он вызывается по-настоящему реализует интерсейс `ICollection`, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному (в предыдущем параграфе я описал как работает такое добавление).
 
 ```csharp
 if (collection is ICollection<T> c)
@@ -140,6 +140,8 @@ return source is IIListProvider<TSource> arrayProvider
     : EnumerableHelpers.ToArray(source);
 ```
 
+Выполнение пойдёт по пути вызова `EnumerableHelpers.ToArray(source)` при вызове `ToArray()` на любой обычной коллекции или массиве (потому что они не реализуют интерфейс `IIListProvider`).
+
 [Реализация](https://github.com/dotnet/corefx/blob/v3.1.0/src/Common/src/System/Collections/Generic/EnumerableHelpers.Linq.cs#L93) `ToArray()` в `EnumerableHelper`.
 
 ```csharp
@@ -161,5 +163,23 @@ builder.AddRange(source);
 return builder.ToArray();
 ```
 
-Опять же проверка на `ICollection` и сразу создание массива нужного размера и класс для динамического создания массива - `LargeArrayBuilder<T>`.
+Опять же проверка на `ICollection` и сразу создание массива нужного размера или использование механизма динамического создания массива - `LargeArrayBuilder<T>`.
 
+## Вывод 1 про разницу производительности
+
+Если метод `ToList()` или `ToArray()` вызывается на коллекции реализующей интерфейс `ICollection` (массив, тоже её реализует), то в обоих случаях код сведётся к:
+
+```charp
+_items = new T[count];
+c.CopyTo(_items, 0);
+```
+И поэтому разница в производительности будет минимальной.
+
+## Что за интерфейс IIListProvider
+
+
+
+## Ссылки
+
+- [Arrays considered somewhat harmful by Erick Lippert](https://docs.microsoft.com/en-us/archive/blogs/ericlippert/arrays-considered-somewhat-harmful)
+- [Is it better to call ToList() or ToArray() in LINQ queries? -Stack Overflow](https://stackoverflow.com/q/1105990/5402731)
