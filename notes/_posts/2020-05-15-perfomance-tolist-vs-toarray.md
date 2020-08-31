@@ -174,9 +174,9 @@ c.CopyTo(_items, 0);
 
 !TODO Бенчмарк и Пояснения по Памяти
 
-## Что за интерфейс IIListProvider
+## Интерфейс IIListProvider
 
-Чтобы объяснить, когда последовательность будет реализовывать этот интерфейс, нужно небольшое пояснение о том, как в принципе устроены linq-методы
+Чтобы объяснить, когда последовательность будет реализовывать этот интерфейс, нужно небольшое пояснение о том, как в принципе устроены linq-методы.
 
 ### Как устроены linq-методы
 
@@ -206,6 +206,126 @@ c.CopyTo(_items, 0);
         }
 
 ```
+
+При вызове `Where` в качестве результата мы получаем один из экземпляров классов: `WhereArrayIterator`, `WhereListIterator`, `WhereEnumerableIterator` (в зависимости от типа коллекции на которой вызывается `Where`). Эти классы инкапсулируют коллекцию или последовательность на которой вызывается `Where` и другую дополнительную информацию (например, предикат `Func<TSource, bool>` который определяет подходит элемент коллекции под условия запроса или нет) и через цепочку наследования реализуют интерфейсы `IEnumerable<TSource>, IEnumerator<TSource>`. При создании эти классы только сохраняют данные, но не проводят фактическую итерацию по коллекции, за счёт этого и работает ленивое выполнение linq-запросов: Мы можем множество раз вызывать на коллекции `Where` и в результате будем получать новый экземпляр `Where`-итератора, хранящего в себе предыдущий.
+
+Фактическая итерация начнётся, например, когда будет вызван метод `MoveNext` и в разных итераторах он может быть реализован по разному (в основном в целях оптимизации).
+
+[WhereArrayIterator](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/Where.cs#L161):
+
+```csharp
+            public override bool MoveNext()
+            {
+                int index = _state - 1;
+                TSource[] source = _source;
+
+                while (unchecked((uint)index < (uint)source.Length))
+                {
+                    TSource item = source[index];
+                    index = _state++;
+                    if (_predicate(item))
+                    {
+                        _current = item;
+                        return true;
+                    }
+                }
+
+                Dispose();
+                return false;
+            }
+```
+
+Используется при вызове `Where` на массиве.
+
+[WhereListIterator](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/Where.cs#L209):
+
+```csharp
+            public override bool MoveNext()
+            {
+                switch (_state)
+                {
+                    case 1:
+                        _enumerator = _source.GetEnumerator();
+                        _state = 2;
+                        goto case 2;
+                    case 2:
+                        while (_enumerator.MoveNext())
+                        {
+                            TSource item = _enumerator.Current;
+                            if (_predicate(item))
+                            {
+                                _current = item;
+                                return true;
+                            }
+                        }
+
+                        Dispose();
+                        break;
+                }
+
+                return false;
+            }
+```
+
+Используется при вызове `Where` на List`е.
+
+Подобные итераторы созданы для каждого Linq-метода и многие из этих итераторов, кроме прочих интерфейсов, реализуют и интерфейс `IIListProvider`.
+
+### IIListProvider
+
+[IIListProvider](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/IIListProvider.cs) не было в .NET Framework, а появился он только в .NET Core.
+
+Интерфейс объявляет три метода:
+
+```charp
+    /// <summary>
+    /// An iterator that can produce an array or <see cref="List{TElement}"/> through an optimized path.
+    /// </summary>
+    internal interface IIListProvider<TElement> : IEnumerable<TElement>
+    {
+        /// <summary>
+        /// Produce an array of the sequence through an optimized path.
+        /// </summary>
+        /// <returns>The array.</returns>
+        TElement[] ToArray();
+
+        /// <summary>
+        /// Produce a <see cref="List{TElement}"/> of the sequence through an optimized path.
+        /// </summary>
+        /// <returns>The <see cref="List{TElement}"/>.</returns>
+        List<TElement> ToList();
+
+        /// <summary>
+        /// Returns the count of elements in the sequence.
+        /// </summary>
+        /// <param name="onlyIfCheap">If true then the count should only be calculated if doing
+        /// so is quick (sure or likely to be constant time), otherwise -1 should be returned.</param>
+        /// <returns>The number of elements.</returns>
+        int GetCount(bool onlyIfCheap);
+    }
+```
+
+Вспомним реализацию метода `ToList()`:
+
+```csharp
+return source is IIListProvider<TSource> listProvider ? listProvider.ToList() : new List<TSource>(source);
+```
+
+Или `ToArray()`:
+
+```csharp
+return source is IIListProvider<TSource> arrayProvider
+    ? arrayProvider.ToArray()
+    : EnumerableHelpers.ToArray(source);
+```
+
+Теперь мы знаем, когда последовательность будет реализовывать `IIListProvider` и выполнение пойдёт по этому пути - когда эта последовательность результат вызова какого-либо linq-метода. 
+
+## Отличия реализации от .NET Framework 4.8
+
+Были проведены оптимизации, например, для Rane метода
+
+https://referencesource.microsoft.com/#System.Core/System/Linq/Enumerable.cs,ed118118b642d9d4
 
 ## Ссылки
 
