@@ -72,9 +72,9 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 
 ## Ссылки
 
-1. [^1]: [ADO.NET Commands and Parameters](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters)
-2. [^2]: [What are the max number of allowable parameters per database provider type?](https://stackoverflow.com/q/6581573/5402731)
-3. [^3]: [Евгений Фирстов - PostgreSQL: Under Pressure](https://youtu.be/ZH7VtsyYSGk)
-3. [^4]: [Entity Framework QuerySqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Query/QuerySqlGenerator.cs#L570)
-4. [^5]: [Npgsql QuerySqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Query/Internal/NpgsqlQuerySqlGenerator.cs)
+[^1]: [ADO.NET Commands and Parameters](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters)
+[^2]: [What are the max number of allowable parameters per database provider type?](https://stackoverflow.com/q/6581573/5402731)
+[^3]: [Евгений Фирстов - PostgreSQL: Under Pressure](https://youtu.be/ZH7VtsyYSGk)
+[^4]: [Entity Framework QuerySqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Query/QuerySqlGenerator.cs#L570)
+[^5]: [Npgsql QuerySqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Query/Internal/NpgsqlQuerySqlGenerator.cs)
 
