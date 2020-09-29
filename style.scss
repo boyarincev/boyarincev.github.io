@@ -300,7 +300,8 @@ footer {
 }
 
 sup {
-  vertical-align: super
+  vertical-align: super;
+  font-size: 80%;
 }
 
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
