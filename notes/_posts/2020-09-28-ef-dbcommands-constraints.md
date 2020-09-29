@@ -27,9 +27,9 @@ WHERE column_name IN (value1, value2, ...);
 В Entity Framework эта проблема не встречается (во всяком случае при работе с PostgreSQL), потому что для каждой вставляемой строки генерируется свой `INSERT` запрос, а для каждого запроса мы можем использовать 65535 параметров, соответственно, чтобы превысить разрешённый лимит нужна таблица с 65536 столбцами:
 
 ```csharp
-            dbContext.Countries.Add(new Models.Country { Name = "Албания"});
-            dbContext.Countries.Add(new Models.Country { Name = "Словения"});
-            dbContext.SaveChanges();
+dbContext.Countries.Add(new Models.Country { Name = "Албания"});
+dbContext.Countries.Add(new Models.Country { Name = "Словения"});
+dbContext.SaveChanges();
 ```
 
 ```
