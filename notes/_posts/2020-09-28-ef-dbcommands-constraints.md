@@ -4,9 +4,9 @@ tags: entityframework
 published: true
 ---
 
-На работе у нас есть некое подобие самописной ORM, работающей напрямую с ADO.NET и одна из проблем с которой мы сталкивались при её разработке - это то, что у количества параметров используемых в DbCommand[^1] есть лимит - этот лимит накладывается базой данных и у разных баз данных он разный[^2].
+На работе у нас есть некое подобие самописной ORM, работающей напрямую с ADO.NET и одна из проблем с которой мы сталкивались при её разработке - это то, что у количества параметров используемых в DbCommand есть лимит - этот лимит накладывается базой данных и у разных баз данных он разный.
 
-Например, у PostgreSQL в каждом sql-statement (под sql-statement имеется в виду то, что обычно называют sql-запросом) может использоваться не больше 65535 параметров (в 1 DbCommand можно отправить множество sql-statement и таким образом в общем DbCommand может содержать больше 65535 параметров).
+Например, у PostgreSQL в каждом sql-statement (под sql-statement имеется в виду то, что в разговорной речи называют sql-запросом) может использоваться не больше 65535 параметров (в одну DbCommand можно отправить множество sql-statement и таким образом в общем DbCommand может содержать больше 65535 параметров).
 
 В большинстве запросов довольно сложно преодолеть разрешённую планку, мы столкнулись с этим ограничением в двух случаях - в `Insert`, когда за один запрос вставляется множество строк:
 
@@ -51,7 +51,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 
 В общем-то в том числе и поэтому для массовой вставки Entity Framework не очень пригоден.
 
-> Кстати, по поводу массового INSERT в дотнете и PostgreSQL недавно был доклад у DotNetRu[^3]
+> Кстати, по поводу массового INSERT в дотнете и PostgreSQL недавно был доклад у DotNetRu: [Евгений Фирстов - PostgreSQL: Under Pressure](https://youtu.be/ZH7VtsyYSGk)
 
 ## IN оператор в Entity Framework
 
@@ -72,17 +72,15 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 
 Тут проблемы в Entity Framework тоже нет, просто потому что он вообще не использует параметры при формировании такого запроса, беря на себя риски с возможными sql-инъекциями.
 
-Кстати, если интересно можете изучить в коде, как Entity Framework генерирует запросы[^4], а вот здесь[^5] SqlGenerator используемый в Npgsql
+Кстати, если интересно можете изучить в коде, как Entity Framework генерирует запросы (ссылки в конце)
 
 ## Как мы решили проблему у себя
 
-Мы просто считаем параметры и при достижении лимита начинаем новый sql-запрос
+Мы просто считаем параметры и при достижении лимита начинаем новый sql-statement
 
 ## Ссылки
 
-[^1]: [ADO.NET Commands and Parameters](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters)
-[^2]: [What are the max number of allowable parameters per database provider type?](https://stackoverflow.com/q/6581573/5402731)
-[^3]: [Евгений Фирстов - PostgreSQL: Under Pressure](https://youtu.be/ZH7VtsyYSGk)
-[^4]: [Entity Framework QuerySqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Query/QuerySqlGenerator.cs#L570)
-[^5]: [Npgsql QuerySqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Query/Internal/NpgsqlQuerySqlGenerator.cs)
-
+1. [ADO.NET Commands and Parameters](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters)
+2. [What are the max number of allowable parameters per database provider type?](https://stackoverflow.com/q/6581573/5402731)
+3. Генерация запросов чтения данных: [Entity Framework QuerySqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Query/QuerySqlGenerator.cs#L570), [Npgsql QuerySqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Query/Internal/NpgsqlQuerySqlGenerator.cs)
+4. Генерация запросов изменения данных [Entity Framework UpdateSqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Update/UpdateSqlGenerator.cs), [Npgsql ](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Update/Internal/NpgsqlUpdateSqlGenerator.cs)
