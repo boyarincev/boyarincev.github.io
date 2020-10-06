@@ -9,6 +9,7 @@ published: true
 > __Зачем использовать параметры в команде__
 >
 > https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html
+>
 > https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters
 
 Например, у PostgreSQL в каждом sql-statement (под sql-statement имеется в виду то, что в разговорной речи называют sql-запросом) может использоваться не больше 65535 параметров (в одну DbCommand можно отправить множество sql-statement и таким образом в общем DbCommand может содержать больше 65535 параметров).
