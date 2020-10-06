@@ -7,6 +7,7 @@ published: true
 На работе у нас есть некое подобие самописной ORM, работающей напрямую с ADO.NET и одна из проблем с которой мы сталкивались при её разработке - это то, что у количества параметров используемых в DbCommand есть лимит - этот лимит накладывается базой данных и у разных баз данных он разный.
 
 > __Зачем использовать параметры в команде__
+>
 > https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html
 > https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters
 
