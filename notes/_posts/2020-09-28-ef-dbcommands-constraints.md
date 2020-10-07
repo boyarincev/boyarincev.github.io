@@ -80,7 +80,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 
 ### Почему бы просто не отказаться от использования параметров
 
-Основная причина в использовании параметров - это [защита от sql-инъекций](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/configuring-parameters-and-parameter-data-types):
+Основная причина в использовании параметров - это [защита от SQL инъекций](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/configuring-parameters-and-parameter-data-types):
 
 > Command objects use parameters to pass values to SQL statements or stored procedures, providing type checking and validation. Unlike command text, parameter input is treated as a literal value, not as executable code. This helps guard against "SQL injection" attacks, in which an attacker inserts a command that compromises security on the server into an SQL statement.
 
