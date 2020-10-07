@@ -1,5 +1,5 @@
 ---
-title: Entity Framework и ограничение параметров в команде
+title: Entity Framework и лимит параметров в команде
 tags: entityframework
 published: true
 ---
