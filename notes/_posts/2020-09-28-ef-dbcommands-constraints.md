@@ -6,13 +6,7 @@ published: true
 
 На работе у нас есть некое подобие самописной ORM, работающей напрямую с ADO.NET и одна из проблем с которой мы сталкивались при её разработке - это то, что у количества параметров используемых в DbCommand есть лимит - этот лимит накладывается базой данных и у разных баз данных он разный.
 
-> __Зачем использовать параметры в команде__
->
-> https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html
->
-> https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters
-
-Например, у PostgreSQL в каждом sql-statement (под sql-statement имеется в виду то, что в разговорной речи называют sql-запросом) может использоваться не больше 65535 параметров (в одну DbCommand можно отправить множество sql-statement и таким образом в общем DbCommand может содержать больше 65535 параметров).
+Например, у PostgreSQL в каждом SQL statement (под SQL statement имеется в виду то, что в разговорной речи называют SQL запросом) может использоваться [не больше 65535 параметров](https://stackoverflow.com/q/6581573/5402731) (в одну DbCommand можно отправить множество SQL statement и таким образом в общем DbCommand может содержать больше 65535 параметров).
 
 В большинстве запросов довольно сложно преодолеть разрешённую планку, мы столкнулись с этим ограничением в двух случаях - в `Insert`, когда за один запрос вставляется множество строк:
 
@@ -76,19 +70,34 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       WHERE c."Name" IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99')
 ```
 
-Тут проблемы в Entity Framework тоже нет, просто потому что он вообще не использует параметры при формировании такого запроса, беря на себя риски с возможными sql-инъекциями.
+Тут проблемы в Entity Framework тоже нет, просто потому что он вообще не использует параметры при формировании такого запроса, беря на себя риски с возможными SQL инъекциями.
 
 Кстати, если интересно можете изучить в коде, как Entity Framework генерирует запросы (ссылки в конце)
 
 ## Как мы решили проблему у себя
 
-Мы просто считаем параметры и при достижении лимита начинаем новый sql-statement
+Мы считаем параметры и при достижении лимита начинаем новый SQL statement.
+
+### Почему бы просто не отказаться от использования параметров
+
+Основная причина в использовании параметров - это [защита от sql-инъекций](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/configuring-parameters-and-parameter-data-types):
+
+> Command objects use parameters to pass values to SQL statements or stored procedures, providing type checking and validation. Unlike command text, parameter input is treated as a literal value, not as executable code. This helps guard against "SQL injection" attacks, in which an attacker inserts a command that compromises security on the server into an SQL statement.
+
+OWASP, например, [рекомендует](https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html#data-access) всегда использовать параметризированные запросы:
+
+> - Use Parameterized SQL commands for all data access, without exception.
+> - Do not use SqlCommand with a string parameter made up of a concatenated SQL String.
 
 ## Другие ограничения на которые тоже стоит обратить внимание
 
-TODO Timeout команд, максимальная длина команды
+Как выяснилось, проблема с ограничением параметров не актуальна для Entity Framework, но есть и другие ограничения, с которыми вероятность столкнуться больше.
 
-## Ссылки
+### Таймаут времени выполнения команды
+
+### Ограничение длины запроса
+
+## Дополнительные ссылки
 
 1. [ADO.NET Commands and Parameters](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters)
 2. [What are the max number of allowable parameters per database provider type?](https://stackoverflow.com/q/6581573/5402731)
