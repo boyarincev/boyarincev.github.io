@@ -6,6 +6,17 @@ published: true
 
 На работе у нас есть некое подобие самописной ORM, работающей напрямую с ADO.NET и одна из проблем с которой мы сталкивались при её разработке - это то, что у количества параметров используемых в DbCommand есть лимит - этот лимит накладывается базой данных и у разных баз данных он разный.
 
+## Зачем вообще использовать параметры
+
+Основная причина в использовании параметров - это [защита от SQL инъекций](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/configuring-parameters-and-parameter-data-types):
+
+> Command objects use parameters to pass values to SQL statements or stored procedures, providing type checking and validation. Unlike command text, parameter input is treated as a literal value, not as executable code. This helps guard against "SQL injection" attacks, in which an attacker inserts a command that compromises security on the server into an SQL statement.
+
+OWASP, например, [рекомендует](https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html#data-access) всегда использовать параметризированные запросы:
+
+> - Use Parameterized SQL commands for all data access, without exception.
+> - Do not use SqlCommand with a string parameter made up of a concatenated SQL String.
+
 Например, у PostgreSQL в каждом SQL statement (под SQL statement имеется в виду то, что в разговорной речи называют SQL запросом) может использоваться [не больше 65535 параметров](https://stackoverflow.com/q/6581573/5402731) (в одну DbCommand можно отправить множество SQL statement и таким образом в общем DbCommand может содержать больше 65535 параметров).
 
 В большинстве запросов довольно сложно преодолеть разрешённую планку, мы столкнулись с этим ограничением в двух случаях - в `Insert`, когда за один запрос вставляется множество строк:
@@ -77,17 +88,6 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 ## Как мы решили проблему в своей ORM
 
 Мы считаем параметры и при достижении лимита начинаем новый SQL statement.
-
-### Почему бы просто не отказаться от использования параметров
-
-Основная причина в использовании параметров - это [защита от SQL инъекций](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/configuring-parameters-and-parameter-data-types):
-
-> Command objects use parameters to pass values to SQL statements or stored procedures, providing type checking and validation. Unlike command text, parameter input is treated as a literal value, not as executable code. This helps guard against "SQL injection" attacks, in which an attacker inserts a command that compromises security on the server into an SQL statement.
-
-OWASP, например, [рекомендует](https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html#data-access) всегда использовать параметризированные запросы:
-
-> - Use Parameterized SQL commands for all data access, without exception.
-> - Do not use SqlCommand with a string parameter made up of a concatenated SQL String.
 
 ## Другие ограничения на которые тоже стоит обратить внимание
 
