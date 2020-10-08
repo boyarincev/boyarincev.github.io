@@ -1,21 +1,10 @@
 ---
 title: Entity Framework и лимит параметров в команде
-tags: entityframework
+tags: entityframework npgsql
 published: true
 ---
 
-На работе у нас есть некое подобие самописной ORM, работающей напрямую с ADO.NET и одна из проблем с которой мы сталкивались при её разработке - это то, что у количества параметров используемых в DbCommand есть лимит - этот лимит накладывается базой данных и у разных баз данных он разный.
-
-## Зачем вообще использовать параметры
-
-Основная причина в использовании параметров - это [защита от SQL инъекций](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/configuring-parameters-and-parameter-data-types):
-
-> Command objects use parameters to pass values to SQL statements or stored procedures, providing type checking and validation. Unlike command text, parameter input is treated as a literal value, not as executable code. This helps guard against "SQL injection" attacks, in which an attacker inserts a command that compromises security on the server into an SQL statement.
-
-OWASP, например, [рекомендует](https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html#data-access) всегда использовать параметризированные запросы:
-
-> - Use Parameterized SQL commands for all data access, without exception.
-> - Do not use SqlCommand with a string parameter made up of a concatenated SQL String.
+На работе у нас есть некое подобие самописной ORM, работающей напрямую с ADO.NET и одна из проблем с которой мы сталкивались при её разработке - это то, что у количества параметров используемых в [DbCommand](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters) есть лимит - этот лимит накладывается базой данных и у разных баз данных он разный.
 
 Например, у PostgreSQL в каждом SQL statement (под SQL statement имеется в виду то, что в разговорной речи называют SQL запросом) может использоваться [не больше 65535 параметров](https://stackoverflow.com/q/6581573/5402731) (в одну DbCommand можно отправить множество SQL statement и таким образом в общем DbCommand может содержать больше 65535 параметров).
 
@@ -37,7 +26,20 @@ WHERE column_name IN (value1, value2, ...);
 
 Здесь список, в котором ищутся значения, должен превышать 65535 элементов.
 
-Первым делом я конечно же полез смотреть как эту проблему решает и решает ли вообще Entity Framework (тут понятное дело многое может зависеть от используемого дата-провайдера, я изучал вопрос только в связке с Npgsql).
+Первым делом я конечно же полез смотреть как эту проблему решает и решает ли вообще Entity Framework.
+
+_Очень многое в поведении может определить конкретный дата-провайдер, я исследовал только связку Entity Framework + Npgsql, поэтому что-то из текста может быть неактуально для других дата-провайдеров_
+
+## Зачем вообще использовать параметры
+
+Основная причина в использовании параметров - это [защита от SQL инъекций](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/configuring-parameters-and-parameter-data-types):
+
+> Command objects use parameters to pass values to SQL statements or stored procedures, providing type checking and validation. Unlike command text, parameter input is treated as a literal value, not as executable code. This helps guard against "SQL injection" attacks, in which an attacker inserts a command that compromises security on the server into an SQL statement.
+
+OWASP, например, [рекомендует](https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html#data-access) всегда использовать параметризированные запросы:
+
+> - Use Parameterized SQL commands for all data access, without exception.
+> - Do not use SqlCommand with a string parameter made up of a concatenated SQL String.
 
 ## Insert множества значений в Entity Framework
 
@@ -62,7 +64,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 
 В общем-то в том числе и поэтому для массовой вставки Entity Framework не очень пригоден.
 
-> Кстати, по поводу массового INSERT в дотнете и PostgreSQL недавно был доклад у DotNetRu: [Евгений Фирстов - PostgreSQL: Under Pressure](https://youtu.be/ZH7VtsyYSGk)
+_Кстати, по поводу массового INSERT в дотнете и PostgreSQL недавно был доклад у DotNetRu: [Евгений Фирстов - PostgreSQL: Under Pressure](https://youtu.be/ZH7VtsyYSGk)_
 
 ## IN оператор в Entity Framework
 
@@ -83,7 +85,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 
 Тут проблемы в Entity Framework тоже нет, просто потому что он вообще не использует параметры при формировании такого запроса, беря на себя риски с возможными SQL инъекциями.
 
-Кстати, если интересно можете изучить в коде, как Entity Framework генерирует запросы (ссылки в конце)
+_Кстати, если интересно можете изучить в коде, как Entity Framework генерирует запросы (ссылки в конце)_
 
 ## Как мы решили проблему в своей ORM
 
@@ -95,17 +97,22 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 
 ### Таймаут времени выполнения команды
 
-У команды есть лимит времени, отведённый на её выполнение, если команда выполняется дольше, то выполнение прерывается выбрасыванием исключения. Выше мы видели, что при вставке множества новых строк, Entity Framework объединят INSERT'ы в одну команду, таким образом потенциально общее время выполнения такой команды может быть большим. Точно также он поступает и в случае операций обновления и удаления и вообще он склонен все возможные операции проводимые на базе данных в один времени упаковывать в одну команду (при вызове `SaveChanges`, например).
+У команды есть лимит времени, отведённый на её выполнение, если команда выполняется дольше, то выполнение прерывается выбрасыванием исключения. Выше мы видели, что при вставке множества новых строк, Entity Framework объединят INSERT'ы в одну команду, таким образом потенциально общее время выполнения такой команды может быть большим. Точно также он поступает и в случае операций обновления и удаления и вообще он склонен все возможные операции проводимые на базе данных в один момент времени упаковывать в одну команду (при вызове `SaveChanges`, например).
 
-_Я не нашёл точной информации в документации о CommandTimeout по-умолчанию и не копался в исходниках, поэтому дальше расскажу о том, что выяснил в результате своих опытов на свяске Entity Framework + Npgsql_
+В логах Entity Framework выше, можно увидеть что CommandTimeout для запросов он устанавливает в 30 секунд:
 
-Entity Framework использует CommandTimeout по умолчанию для Npgsql
+```
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (7ms) [Parameters=[@p0='?', @p1='?'], CommandType='Text', CommandTimeout='30']
+```
+
+Выбирает такое значение он, вероятно, потому что это [значение по умолчанию для Npgsql](https://www.npgsql.org/doc/connection-string-parameters.html).
+
+Изменить его можно либо задав прямо в connection string подключения к базе данных, либо в [коде](https://stackoverflow.com/a/6234593/5402731)
 
 ### Ограничение длины запроса
 
 ## Дополнительные ссылки
 
-1. [ADO.NET Commands and Parameters](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/commands-and-parameters)
-2. [What are the max number of allowable parameters per database provider type?](https://stackoverflow.com/q/6581573/5402731)
-3. Генерация запросов чтения данных: [Entity Framework QuerySqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Query/QuerySqlGenerator.cs#L570), [Npgsql QuerySqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Query/Internal/NpgsqlQuerySqlGenerator.cs)
-4. Генерация запросов изменения данных [Entity Framework UpdateSqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Update/UpdateSqlGenerator.cs), [Npgsql UpdateSqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Update/Internal/NpgsqlUpdateSqlGenerator.cs)
+1. Генерация запросов чтения данных: [Entity Framework QuerySqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Query/QuerySqlGenerator.cs#L570), [Npgsql QuerySqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Query/Internal/NpgsqlQuerySqlGenerator.cs)
+2. Генерация запросов изменения данных [Entity Framework UpdateSqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Update/UpdateSqlGenerator.cs), [Npgsql UpdateSqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Update/Internal/NpgsqlUpdateSqlGenerator.cs)
