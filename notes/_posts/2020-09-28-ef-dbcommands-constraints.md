@@ -112,3 +112,4 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 
 1. Генерация запросов чтения данных: [Entity Framework QuerySqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Query/QuerySqlGenerator.cs#L570), [Npgsql QuerySqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Query/Internal/NpgsqlQuerySqlGenerator.cs)
 2. Генерация запросов изменения данных [Entity Framework UpdateSqlGenerator](https://github.com/dotnet/efcore/blob/v3.1.8/src/EFCore.Relational/Update/UpdateSqlGenerator.cs), [Npgsql UpdateSqlGenerator](https://github.com/npgsql/efcore.pg/blob/v3.1.4/src/EFCore.PG/Update/Internal/NpgsqlUpdateSqlGenerator.cs)
+3. Статья в которой исследуется ограничение параметров применительно к SQL Server: [Playing with parameters limit on SQL Server with Entity Framework](https://www.tabsoverspaces.com/233644-playing-with-parameters-limit-on-sql-server-with-entity-framework)
