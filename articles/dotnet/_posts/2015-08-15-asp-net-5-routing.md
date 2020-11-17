@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Маршрутизация в ASP.NET 5
-tags: ASP-NET-CORE
+tags: ASP-NET-CORE-1
 permalink: /:year/:month/:title/
 ---
 
