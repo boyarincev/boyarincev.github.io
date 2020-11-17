@@ -211,6 +211,8 @@ c.CopyTo(_items, 0);
 
 Фактическая итерация начнётся, например, когда будет вызван метод `MoveNext` и в разных итераторах он может быть реализован по разному (в основном в целях оптимизации).
 
+!TODO Объяснить когда будет вызван метод MoveNext
+
 [WhereArrayIterator](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/Where.cs#L161):
 
 ```csharp
