@@ -1,11 +1,13 @@
 ---
 layout: post
 title: Маршрутизация в ASP.NET 5
-tags: ASP-NET-5
+tags: ASP-NET-CORE
 permalink: /:year/:month/:title/
 ---
 
->Эта статья была опубликована в корпоративном блоге Microsoft на habrahabr.ru: [Ссылка](http://habrahabr.ru/company/microsoft/blog/268037/).
+> Эта статья была опубликована в корпоративном блоге Microsoft на habrahabr.ru: [Ссылка](http://habrahabr.ru/company/microsoft/blog/268037/).
+
+> Несмотря на то, что статья использует название "ASP.NET 5" она не имеет никакого отношения к тому что в 2020 году [могут понимать под ASP.NET 5](https://habr.com/ru/company/microsoft/blog/493390/). ASP.NET 5 назывался ASP.NET Core до релиза первой версии. Информация в статье актуальна для ASP.NET Core первой и второй версии, в третьей же версии фреймворка маршрутизация была сильно переделана.
 
 Сегодня мы посмотрим на систему маршрутизации в ASP.NET 5.
 
