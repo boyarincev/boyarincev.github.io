@@ -1,9 +1,11 @@
 ---
 layout: post
 title: ASP.NET 5 Новый тип проекта и работа с Grunt
-tags: ASP-NET-5 Grunt
+tags: ASP-NET-Core-1 Grunt
 permalink: /:year/:month/:title/
 ---
+
+> Несмотря на то, что статья использует название "ASP.NET 5", она не имеет никакого отношения к тому, что в 2020 году [могут понимать под ASP.NET 5](https://habr.com/ru/company/microsoft/blog/493390/). ASP.NET 5 назывался ASP.NET Core до релиза первой версии.
 
 В этой статье я опишу новый проект веб-приложения ASP.NET 5, а также расскажу о настройке и использовании Grunt в нем.
 
