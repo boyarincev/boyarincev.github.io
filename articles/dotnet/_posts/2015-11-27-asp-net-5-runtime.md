@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Погружение в ASP.NET 5 Runtime
-tags: ASP-NET-5 DNX
+tags: ASP-NET-Core
 permalink: /:year/:month/:title/
 ---
 
