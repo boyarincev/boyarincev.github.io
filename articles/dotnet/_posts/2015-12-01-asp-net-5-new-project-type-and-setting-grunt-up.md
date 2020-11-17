@@ -1,7 +1,7 @@
 ---
 layout: post
 title: ASP.NET 5 Новый тип проекта и работа с Grunt
-tags: ASP-NET-Core-1 Grunt
+tags: ASP-NET-CORE-1 Grunt
 permalink: /:year/:month/:title/
 ---
 
