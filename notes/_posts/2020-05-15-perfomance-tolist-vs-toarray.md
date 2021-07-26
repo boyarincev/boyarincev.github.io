@@ -10,13 +10,13 @@ published: false
 
 Cначала нужно остановится на том, есть ли какие-то другие причины, кроме производительности, выбрать тот или иной метод. При использовании `ToList()` результатом операции будет [List](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-5.0), а при использовании `ToArray()` - [Array](https://docs.microsoft.com/en-us/dotnet/api/system.array?view=net-5.0). Соответственно выбор метода сводится к вопросу, что для вас предпочтительнее на выходе.
 
-Я не вижу каких-то преимуществ массива перед списком, а вот минусы у него есть.
+Я не вижу каких-то преимуществ массива перед списком (я говорю сейчас о преимуществах, рассматривая массив как [абстрактный тип данных](https://ru.wikipedia.org/wiki/%D0%90%D0%B1%D1%81%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%BD%D1%8B%D0%B9_%D1%82%D0%B8%D0%BF_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85)), а вот минусы у него есть.
 
 ### Массивы не типобезопасны при ковариации
 
 ```csharp
 object[] array = new String[10];  
-// The following statement produces a run-time exception.  
+// Следующая инструкция выбросить исключение времени выполнения
 // array[0] = 10;  
 ```
 
@@ -34,7 +34,7 @@ object[] array = new String[10];
 
 ### Массивы разрешают изменения в массиве при foreach, а List - нет
 
-[Enumerator используемый List](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.enumerator?view=net-5.0) не разрешает изменения коллекции во время итерации, а [Enumerator используемый Array](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Array.Enumerators.cs) разрешает. И такая разница в поведении вообще довольна опасна, так как вы можете использовать массив, всё под тем же многострадальным интерфейсом `IList` и при этом изменение массива при итерации у вас будет работать, а потом кто-то изменит нижележащий тип с массива на лист и вы получите runtime-ошибку.
+[Enumerator используемый List](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.enumerator?view=net-5.0) не разрешает изменения коллекции во время итерации, а [Enumerator используемый Array](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Array.Enumerators.cs) разрешает. И такая разница в поведении вообще довольна опасна, так как вы можете использовать массив, всё под тем же интерфейсом `IList` и при этом изменение массива при итерации у вас будет работать, а потом кто-то изменит нижележащий тип с массива на лист и вы получите исключение времени выполнения.
 
 ```csharp
 IList<int> source = Enumerable.Range(1, 10).ToArray();
@@ -87,7 +87,7 @@ foreach (var x in source)
 return source is IIListProvider<TSource> listProvider ? listProvider.ToList() : new List<TSource>(source);
 ```
 
-На `IIListProvider` остановимся позже, пока разберём [конструктор списка принимающий последовательность](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.generic.list-1.-ctor?view=net-5.0#System_Collections_Generic_List_1__ctor_System_Collections_Generic_IEnumerable__0__) - по этому пути выполнение пойдёт, если мы `ToList()` вызовем на любой обычной коллекции, массиве или при использовании итератора (потому что они не реализуют интерфейс `IIListProvider`).
+На `IIListProvider` остановимся позже, пока разберём [конструктор списка принимающий последовательность](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.generic.list-1.-ctor?view=net-5.0#System_Collections_Generic_List_1__ctor_System_Collections_Generic_IEnumerable__0__) - по этому пути выполнение пойдёт, если мы `ToList()` вызовем на любой обычной коллекции, массиве или при использовании итератора (потому что они в данный момент не реализуют интерфейс `IIListProvider`).
 
 [Конструктор имеет "хак"](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/List.cs#L66) на случай, если последовательность на которой он вызывается по-настоящему реализует интерсейс `ICollection`, для того, чтобы сразу создать массив нужного размера, иначе будет в цикле добавлять элементы по одному.
 
@@ -134,7 +134,9 @@ return source is IIListProvider<TSource> arrayProvider
     : EnumerableHelpers.ToArray(source);
 ```
 
-Выполнение пойдёт по пути вызова `EnumerableHelpers.ToArray(source)` при вызове `ToArray()` на любой обычной коллекции, массиве или последовательности сгенерированной с помощью итератора (потому что они не реализуют интерфейс `IIListProvider`).
+Выполнение пойдёт по пути вызова `EnumerableHelpers.ToArray(source)` при вызове `ToArray()` на любой обычной коллекции, массиве или последовательности сгенерированной с помощью итератора (потому что они в данный момент не реализуют интерфейс `IIListProvider`).
+
+!TODO Исправить код на пятую версию
 
 [Реализация](https://github.com/dotnet/corefx/blob/v3.1.0/src/Common/src/System/Collections/Generic/EnumerableHelpers.Linq.cs#L93) `ToArray()` в `EnumerableHelper`.
 
