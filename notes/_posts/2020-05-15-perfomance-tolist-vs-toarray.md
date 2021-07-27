@@ -4,7 +4,7 @@ tags: perfomance
 published: false	
 ---	
 
-Два самых популярных варианта материализовать linq-запрос (в этой статье под linq-запросом я подразумеваю только [LINQ to Objects](https://docs.microsoft.com/ru-ru/dotnet/csharp/programming-guide/concepts/linq/linq-to-objects)) - это вызвать `ToList()` или `ToArray()` на нём. Давайте разберёмся есть ли какие-то отличия в их производительности.
+Два самых популярных варианта материализовать linq-запрос - это вызвать `ToList()` или `ToArray()` на нём. Давайте разберёмся есть ли какие-то отличия в их производительности.
 
 ## Какая концептуальная разница что использовать
 
@@ -28,13 +28,13 @@ object[] array = new String[10];
 
 ### Массивы реализуют интерфейс IList, но не поддерживают операцию добавления элемента
 
-Приведя массив к интерфейсу [IList](https://docs.microsoft.com/en-us/dotnet/api/system.collections.ilist?view=net-5.0), вы получите runtime-ошибку при [вызове Add на нём](https://docs.microsoft.com/en-us/dotnet/api/system.array.system-collections-ilist-add?view=net-5.0#System_Array_System_Collections_IList_Add_System_Object_). Да, `IList` имеет свойство [IsFixedSize](https://docs.microsoft.com/en-us/dotnet/api/system.collections.ilist.isfixedsize?view=net-5.0#System_Collections_IList_IsFixedSize) для того, чтобы узнать изменяемая ли коллекция находится под капотом, но по мне так это просто ещё один пример [протекающей абстракции](https://en.wikipedia.org/wiki/Leaky_abstraction) - не удивлюсь, если свойство было добавлено в интерфейс только потому что массив реализует интерфейс `IList`.
+Приведя массив к интерфейсу [IList](https://docs.microsoft.com/en-us/dotnet/api/system.collections.ilist?view=net-5.0), вы получите ошибку времени выполнения при [вызове Add на нём](https://docs.microsoft.com/en-us/dotnet/api/system.array.system-collections-ilist-add?view=net-5.0#System_Array_System_Collections_IList_Add_System_Object_). Да, `IList` имеет свойство [IsFixedSize](https://docs.microsoft.com/en-us/dotnet/api/system.collections.ilist.isfixedsize?view=net-5.0#System_Collections_IList_IsFixedSize) для того, чтобы узнать изменяемая ли коллекция находится под капотом, но по мне так это просто ещё один пример [протекающей абстракции](https://en.wikipedia.org/wiki/Leaky_abstraction) - не удивлюсь, если свойство было добавлено в интерфейс только потому что массив реализует интерфейс `IList`.
 
 Есть ещё вещи, которые нельзя отнести к минусам, скорее просто к особенностям.
 
 ### Массивы разрешают изменения в массиве при foreach, а List - нет
 
-[Enumerator используемый List](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.enumerator?view=net-5.0) не разрешает изменения коллекции во время итерации, а [Enumerator используемый Array](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Array.Enumerators.cs) разрешает. И такая разница в поведении вообще довольна опасна, так как вы можете использовать массив, всё под тем же интерфейсом `IList` и при этом изменение массива при итерации у вас будет работать, а потом кто-то изменит нижележащий тип с массива на лист и вы получите исключение времени выполнения.
+[Enumerator используемый List](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.enumerator?view=net-5.0) не разрешает изменения коллекции во время итерации по ней, а [Enumerator используемый Array](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Array.Enumerators.cs) разрешает. И такая разница в поведении вообще довольна опасна, так как вы можете использовать массив, всё под тем же интерфейсом `IList` и при этом изменение массива при итерации у вас будет работать, а потом кто-то изменит нижележащий тип с массива на лист и вы получите исключение времени выполнения.
 
 ```csharp
 IList<int> source = Enumerable.Range(1, 10).ToArray();
@@ -75,7 +75,7 @@ foreach (var x in source)
 //System.InvalidOperationException
 ```
 
-Пример взят [отсюда](https://stackoverflow.com/a/41246500/5402731).
+Пример взят из [Is it better to call ToList() or ToArray() in LINQ queries?](https://stackoverflow.com/a/41246500/5402731).
 
 Ну и можете ещё прочитать статью Эрика Липперта [Arrays considered somewhat harmful](https://docs.microsoft.com/en-us/archive/blogs/ericlippert/arrays-considered-somewhat-harmful), чтобы узнать его мнение по поводу использования массивов.
 
@@ -120,7 +120,7 @@ else
 }
 ```
 
-Вообще список внутри реализован с использованием массива. Изначально это пустой массив (если мы явно не задаём Capacity при создании `List` - а это [другой конструктор](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.-ctor?view=net-5.0#System_Collections_Generic_List_1__ctor_System_Int32_) `List`), после добавления в список первого элемента создаётся новый массив небольшого размера (на данный момент [4 элемента](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/List.cs#L23)), по мере добавления элементов в список, когда место в текущем массиве подходит к концу, происходит создание нового массива в два раза больше предыдущего и копирование элементов из предыдущего. Если бы мы при создании списка использовали конструктор принимающий Capacity - то экземпляр списка сразу бы [создался с массивом нужного размера](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/List.cs#L46).
+Вообще список внутри реализован с использованием массива. Изначально это пустой массив (если мы явно не задаём `Capacity` при создании `List` - а это [другой конструктор](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.-ctor?view=net-5.0#System_Collections_Generic_List_1__ctor_System_Int32_) `List`), после добавления в список первого элемента создаётся новый массив небольшого размера (на данный момент [4 элемента](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/List.cs#L23)), по мере добавления элементов в список, когда место в текущем массиве подходит к концу, происходит создание нового массива в два раза больше предыдущего и копирование элементов из предыдущего. Если бы мы при создании списка использовали конструктор принимающий `Capacity` - то экземпляр списка сразу бы [создался с массивом нужного размера](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/List.cs#L46).
 
 Не трудно догадаться, что множественное пересоздание массива и копирование в него данных из старого - операция более затратная, чем сразу создать массив нужного размера и заполнить его единожды, поэтому в случае вызова `ToList()` на коллекции реализующей `ICollection` материализация будет проходить гораздо быстрее и поэтому тестировать производительность `ToList()` просто создав список и приведя его к интерфейсу `IEnumerable` - смысла немного.
 
@@ -138,7 +138,7 @@ return source is IIListProvider<TSource> arrayProvider
 
 !TODO Исправить код на пятую версию
 
-[Реализация](https://github.com/dotnet/corefx/blob/v3.1.0/src/Common/src/System/Collections/Generic/EnumerableHelpers.Linq.cs#L93) `ToArray()` в `EnumerableHelper`.
+[Реализация](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/Common/src/System/Collections/Generic/EnumerableHelpers.Linq.cs#L92) `ToArray()` в `EnumerableHelper`.
 
 ```csharp
 if (source is ICollection<T> collection)
@@ -182,11 +182,11 @@ c.CopyTo(_items, 0);
 
 ### Как устроены linq-методы
 
-Рассмотрим на примере [одной из перегрузок метода](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/Where.cs#L13) `Where`.
+Если вам будет непонятен этот раздел, то ~~закрывайте статью~~ прочитайте сперва [Введение в запросы LINQ (C#).](https://docs.microsoft.com/ru-ru/dotnet/csharp/programming-guide/concepts/linq/introduction-to-linq-queries)
+
+Рассмотрим на примере [одной из перегрузок метода](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Linq/src/System/Linq/Where.cs#L24) `Where()`.
 
 ```csharp
-        public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
-        {
             if (source is Iterator<TSource> iterator)
             {
                 return iterator.Where(predicate);
@@ -204,18 +204,14 @@ c.CopyTo(_items, 0);
                 return new WhereListIterator<TSource>(list, predicate);
             }
 
-            return new WhereEnumerableIterator<TSource>(source, predicate);
-        }
-
+            return new WhereEnumerableIterator<TSource>(source, predicate);        
 ```
 
-При вызове `Where` в качестве результата мы получаем один из экземпляров классов: `WhereArrayIterator`, `WhereListIterator`, `WhereEnumerableIterator` (в зависимости от типа коллекции на которой вызывается `Where`). Эти классы инкапсулируют коллекцию или последовательность на которой вызывается `Where` и другую дополнительную информацию (например, предикат `Func<TSource, bool>` который определяет подходит элемент коллекции под условия запроса или нет) и через цепочку наследования реализуют интерфейсы `IEnumerable<TSource>, IEnumerator<TSource>`. При создании эти классы только сохраняют данные, но не проводят фактическую итерацию по коллекции, за счёт этого и работает ленивое выполнение linq-запросов: Мы можем множество раз вызывать на коллекции `Where` и в результате будем получать новый экземпляр `Where`-итератора, хранящего в себе предыдущий.
+При вызове `Where()` в качестве результата мы получаем один из экземпляров классов: `WhereArrayIterator`, `WhereListIterator`, `WhereEnumerableIterator` (в зависимости от типа коллекции на которой вызывается `Where()`). Эти классы инкапсулируют коллекцию или последовательность на которой вызывается `Where()` и другую дополнительную информацию (например, предикат `Func<TSource, bool>` который определяет подходит элемент коллекции под условия запроса или нет) и через цепочку наследования реализуют интерфейсы `IEnumerable<TSource>, IEnumerator<TSource>`. При создании эти классы только сохраняют данные о вызове метода, но не проводят фактическую итерацию по коллекции, за счёт этого и работает ленивое выполнение linq-запросов: Мы можем множество раз вызывать на коллекции `Where()` и в результате будем получать новый экземпляр `Where()`-итератора, хранящего в себе предыдущий.
 
-Фактическая итерация начнётся, например, когда будет вызван метод `MoveNext` и в разных итераторах он может быть реализован по разному (в основном в целях оптимизации).
+Фактическая итерация начнётся, например, когда будет вызван метод `MoveNext` (неотъемлимая часть паттерна [Итератор](https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ienumerable?view=net-5.0#remarks)) и в разных итераторах он может быть реализован по разному (в основном в целях оптимизации).
 
-!TODO Объяснить когда будет вызван метод MoveNext
-
-[WhereArrayIterator](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/Where.cs#L161):
+[WhereArrayIterator](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Linq/src/System/Linq/Where.cs#L161):
 
 ```csharp
             public override bool MoveNext()
@@ -239,9 +235,9 @@ c.CopyTo(_items, 0);
             }
 ```
 
-Используется при вызове `Where` на массиве.
+Используется при вызове `Where()` на массиве.
 
-[WhereListIterator](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/Where.cs#L209):
+[WhereListIterator](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Linq/src/System/Linq/Where.cs#L209):
 
 ```csharp
             public override bool MoveNext()
@@ -271,13 +267,13 @@ c.CopyTo(_items, 0);
             }
 ```
 
-Используется при вызове `Where` на List`е.
+Используется при вызове `Where()` на List`е.
 
 Подобные итераторы созданы для каждого Linq-метода и многие из этих итераторов, кроме прочих интерфейсов, реализуют и интерфейс `IIListProvider`.
 
 ### IIListProvider
 
-[IIListProvider](https://github.com/dotnet/corefx/blob/v3.1.0/src/System.Linq/src/System/Linq/IIListProvider.cs) не было в .NET Framework, а появился он только в .NET Core.
+Интерфейса [IIListProvider](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Linq/src/System/Linq/IIListProvider.cs) не было в .NET Framework, ввели его только в .NET Core.
 
 Интерфейс объявляет три метода:
 
@@ -324,6 +320,57 @@ return source is IIListProvider<TSource> arrayProvider
 ```
 
 Теперь мы знаем, когда последовательность будет реализовывать `IIListProvider` и выполнение пойдёт по этому пути - когда эта последовательность результат вызова какого-либо linq-метода. 
+
+```csharp
+  var list = new List<int> {1, 2, 3};
+  filteredList = list.Where(l => l < 3).ToList();
+```
+
+В примере выше вызов `Where()` возвращает `WhereListIterator` и при вызове `ToList()` будет вызвана [реализация](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Linq/src/System/Linq/Where.SpeedOpt.cs#L164) `ToList()` находящаяся там, посмотрим на неё:
+
+```csharp
+  public List<TSource> ToList()
+  {
+      var list = new List<TSource>();
+
+      for (int i = 0; i < _source.Count; i++)
+      {
+          TSource item = _source[i];
+          if (_predicate(item))
+          {
+              list.Add(item);
+          }
+      }
+
+      return list;
+  }
+```
+
+А теперь на [реализацию](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/System.Linq/src/System/Linq/Where.SpeedOpt.cs#L148) 'ToArray()' в `WhereListIterator`:
+
+```csharp
+  public TSource[] ToArray()
+  {
+      var builder = new LargeArrayBuilder<TSource>(_source.Count);
+
+      for (int i = 0; i < _source.Count; i++)
+      {
+          TSource item = _source[i];
+          if (_predicate(item))
+          {
+              builder.Add(item);
+          }
+      }
+
+      return builder.ToArray();
+  }
+```
+
+!TODO В чём разница между методами
+!TODO Почему те кто тестируют на Range не правы
+!TODO Замечание про тестирование на итераторе
+!TODO Сравнение LargeArrayBuilder с алгоритмом List
+!TODO Как работает ToListAsync и ToArrayAsync
 
 ## Отличия реализации от .NET Framework 4.8
 
