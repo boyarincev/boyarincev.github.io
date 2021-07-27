@@ -136,8 +136,6 @@ return source is IIListProvider<TSource> arrayProvider
 
 Выполнение пойдёт по пути вызова `EnumerableHelpers.ToArray(source)` при вызове `ToArray()` на любой обычной коллекции, массиве или последовательности сгенерированной с помощью итератора (потому что они в данный момент не реализуют интерфейс `IIListProvider`).
 
-!TODO Исправить код на пятую версию
-
 [Реализация](https://github.com/dotnet/runtime/blob/v5.0.0/src/libraries/Common/src/System/Collections/Generic/EnumerableHelpers.Linq.cs#L92) `ToArray()` в `EnumerableHelper`.
 
 ```csharp
